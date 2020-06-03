@@ -11,8 +11,8 @@ const OrderInfo = (props) => {
   const orderItems = (item) => {
     let title = item.product.name;
     let variant = "";
-    let variantKeys = Object.keys(item.variant);
     if (item.variant) {
+      let variantKeys = Object.keys(item.variant);
       variantKeys.map((aKey, index)=>{
         variant += `${item.variant[aKey].name}: ${item.variant[aKey].value}${index == variantKeys.length -1 ? "" : ", "}`
       })
