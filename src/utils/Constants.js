@@ -32,17 +32,19 @@ export const getInventoryVariants = (productVariants, inventoryVariants) => {
   let result = {};
   let label = ""
   let variantKeys = Object.keys(productVariants);
-  variantKeys.map((aKey, index)=>{
-    let value = ""
-    if (inventoryVariants[aKey]) {
-      value = inventoryVariants[aKey];
-      label += `${inventoryVariants[aKey]}${variantKeys.length - 1 != index ? " / " : ""}`
-    }
-    result[aKey] = {
-      name: productVariants[aKey],
-      value: value
-    }
-  })
+  if (productVariants) {
+    variantKeys.map((aKey, index)=>{
+      let value = ""
+      if (inventoryVariants[aKey]) {
+        value = inventoryVariants[aKey];
+        label += `${inventoryVariants[aKey]}${variantKeys.length - 1 != index ? " / " : ""}`
+      }
+      result[aKey] = {
+        name: productVariants[aKey],
+        value: value
+      }
+    })
+  }
   return {
     variants: result,
     label: label

@@ -202,7 +202,7 @@ const Orders = (props) => {
       },
       body: stringifiedObj
     }).then((response)=>{
-      
+
     });
 
 
@@ -212,14 +212,14 @@ const Orders = (props) => {
 
   return (
     <div style={{padding:'24px'}}>
-    <Button onClick={()=>{
+    {/* <Button onClick={()=>{
       let company="js", trackingNum="JDVG00326558797";
       getKuaiDi100(company,trackingNum).then(data=>{
         console.log('getKuaiDi100 data',data)
       }).catch(err=>{
         console.log('getKuaiDi100 err',err)
       })
-    }}>快递</Button>
+    }}>快递</Button> */}
       <Form
         form={form}
         onFinish={onFormSubmit}
