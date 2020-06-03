@@ -10,7 +10,10 @@ import Loading from './component/Loading';
 export const configId = "mananml";
 export const defaultImage_system = require("./noImageFound.png");
 
+// this is for localhost
 // export const MIDDLETIER_URL = "http://localhost:3000/graphql";
+
+// this is for lightsail Server
 export const MIDDLETIER_URL = "http://15.165.150.23/graphql";
 
 export const getAllProductCategory = (products) => {
@@ -209,7 +212,7 @@ export const useProductsState = (query, options={}) => {
 //   useEffect(() => {
 //     const handleScroll = () => setScrollPosition(window.scrollY);
 //     document.addEventListener('scroll', handleScroll);
-//     return () => 
+//     return () =>
 //       document.removeEventListener('scroll', handleScroll);
 //   }, []);
 // }
@@ -258,7 +261,7 @@ const SET_CART_CACHE = gql`
 `;
 
 const defaultCartObj = {
-  items: [] 
+  items: []
 }
 export const setCartCache = (data) => {
   DefaultClientAPI.client.writeQuery({
