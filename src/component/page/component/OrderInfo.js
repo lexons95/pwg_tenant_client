@@ -55,7 +55,7 @@ const OrderInfo = (props) => {
       order ?
       <React.Fragment>
         <Divider orientation="left">订单</Divider>
-        <Descriptions 
+        <Descriptions
             size="small"
             bordered
             column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}
@@ -64,14 +64,14 @@ const OrderInfo = (props) => {
             <Descriptions.Item label="订购日期">{format(new Date(order.createdAt), "MM/dd/yyyy hh:mm:ss aa")}</Descriptions.Item>
             <Descriptions.Item label="付款状态">
                 {
-                  order.paid ? 
+                  order.paid ?
                     <span style={{"color":"green"}}>已付款</span> : <span style={{"color":"red"}}>待付款</span>
                 }
             </Descriptions.Item>
             <Descriptions.Item label="货物状态">{order.sentOut ? <span style={{"color":"green"}}>已出货 <small> (运单号: {order.trackingNum})</small></span>:<span style={{"color":"red"}}>未出货</span>}</Descriptions.Item>
         </Descriptions>
         <Divider orientation="left">收件人</Divider>
-        <Descriptions 
+        <Descriptions
             id="buyerInfoTable"
             size="small"
             bordered
@@ -84,7 +84,7 @@ const OrderInfo = (props) => {
             <Descriptions.Item label="省份">{order.customer.province}</Descriptions.Item>
             <Descriptions.Item label="备注">{order.remark ? order.remark : '-'}</Descriptions.Item>
         </Descriptions>
-        <Divider orientation="left">购买列表</Divider> 
+        <Divider orientation="left">购买列表</Divider>
         <List
           itemLayout="horizontal"
           dataSource={order.items}
@@ -92,7 +92,7 @@ const OrderInfo = (props) => {
           //bordered
           footer={(
             <div className="orderInfo-item-summary">
-              <Descriptions 
+              <Descriptions
                 bordered={true}
                 size="small"
                 column={{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
@@ -111,7 +111,7 @@ const OrderInfo = (props) => {
 
         <div className="orderInfo-extra">
           {
-            configCache.paymentQRImage ? 
+            configCache.paymentQRImage ?
             <div style={{textAlign:'center',flexGrow:1}}>
               <img src={configCache.imageSrc + configCache.paymentQRImage} />
             </div>
@@ -128,7 +128,7 @@ const OrderInfo = (props) => {
       </React.Fragment>
       : "Not found"
     }
-  
+
     </Modal>
   )
 }

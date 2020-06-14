@@ -13,6 +13,8 @@ export const defaultImage_system = require("./noImageFound.png");
 // 0: local (国内), 1: oversea (国外)
 export const stockLocation = "0";
 // export const MIDDLETIER_URL = "http://localhost:3000/graphql";
+
+// this is for lightsail Server
 export const MIDDLETIER_URL = "http://15.165.150.23/graphql";
 
 export const getAllProductCategory = (products) => {
@@ -101,7 +103,7 @@ console.log('itemsitems',items)
     // by total price (conditions)
     const calcOptions = [
       {
-        
+
       }
     ]
     // order calculation methods
@@ -109,10 +111,10 @@ console.log('itemsitems',items)
     const deliveryMethod1 = () => {
       const ranges = [
         {
-  
+
         }
       ]
-    } 
+    }
 
   }
 
@@ -248,7 +250,7 @@ export const useProductsState = (query, options={}) => {
 //   useEffect(() => {
 //     const handleScroll = () => setScrollPosition(window.scrollY);
 //     document.addEventListener('scroll', handleScroll);
-//     return () => 
+//     return () =>
 //       document.removeEventListener('scroll', handleScroll);
 //   }, []);
 // }
@@ -297,7 +299,7 @@ const SET_CART_CACHE = gql`
 `;
 
 const defaultCartObj = {
-  items: [] 
+  items: []
 }
 export const setCartCache = (data) => {
   DefaultClientAPI.client.writeQuery({
