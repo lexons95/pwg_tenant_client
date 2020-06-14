@@ -10,6 +10,8 @@ import Loading from './component/Loading';
 export const configId = "mananml";
 export const defaultImage_system = require("./noImageFound.png");
 
+// 0: local (国内), 1: oversea (国外)
+export const stockLocation = "0";
 // export const MIDDLETIER_URL = "http://localhost:3000/graphql";
 export const MIDDLETIER_URL = "http://15.165.150.23/graphql";
 
@@ -67,15 +69,52 @@ export const cartCalculation = (items = [], deliveryFee = 0) => {
     total: total,
     subTotal: subTotal
   }
-  // delivery calculation options
-  // static
-  // by weight (conditions)
-  // by total price (conditions)
-  const calcOptions = [
+
+
+console.log('itemsitems',items)
+  if (stockLocation == '1') {
+    /*
+    A 5 草 free 1 皇室 SXB 15
+    B 5 草 free 2 皇室 SXB 30
+    C 5 草 free 3 皇室 SXB 55
+    D 5 草 free 4 皇室 SXB 70
+    E 5 草 free 5 皇室 SXB 90
+
+    weight max 2kg
+    0~1 80
+    1~2 96
+
+    order charges
     {
+      value: Float,
 
     }
-  ]
+    */
+
+    let promotion = {
+      code: "MS"
+    }
+
+    // delivery calculation options
+    // static
+    // by weight (conditions)
+    // by total price (conditions)
+    const calcOptions = [
+      {
+        
+      }
+    ]
+    // order calculation methods
+    let maxWeight = 2000;
+    const deliveryMethod1 = () => {
+      const ranges = [
+        {
+  
+        }
+      ]
+    } 
+
+  }
 
   return result;
 

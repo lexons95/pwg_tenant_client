@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { Modal, Carousel, Select, Button, Input, Divider, Empty, Form } from 'antd';
+import { Modal, Carousel, Select, Button, Input, Divider, Empty, Form, Tag } from 'antd';
 import { LeftOutlined, RightOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { useLazyQuery } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
@@ -19,6 +19,7 @@ const READ_PRODUCT_INVENTORY_QUERY = gql`
       updatedAt
       price
       stock
+      weight
       variants
       published
       productId
@@ -291,10 +292,7 @@ const ProductInfo = (props) => {
                 return anItem;
               }
             })
-            // let calcResult = cartCalculation(newCartItems);
             newCartObj['items'] = newCartItems;
-            // newCartObj['total'] = calcResult.total;
-            // newCartObj['deliveryFee'] = calcResult.deliveryFee;
             setCartCache(newCartObj);
             showMessage({type:'success',message:"添加成功"});
             
@@ -310,8 +308,9 @@ const ProductInfo = (props) => {
             let newCartItem = {
               inventoryId: values.inventory,
               qty: values.qty,
-              stock: foundInventory.stock,
+              weight: foundInventory.weight,
               price: foundInventory.price,
+              stock: foundInventory.stock,
               product: {
                 _id: product._id,
                 name: product.name,
@@ -320,10 +319,7 @@ const ProductInfo = (props) => {
               variant: variantsResult.variants
             }
             newCartItems.push(newCartItem);
-            // let calcResult = cartCalculation(newCartItems);
             newCartObj['items'] = newCartItems;
-            // newCartObj['total'] = calcResult.total;
-            // newCartObj['deliveryFee'] = calcResult.deliveryFee;
             setCartCache(newCartObj);
             showMessage({type:'success',message:"添加成功"});
           }
@@ -406,6 +402,17 @@ const ProductInfo = (props) => {
             <div className="productInfo-main-description">
               <Divider orientation="left">产品详情</Divider>
               {/* <b>产品详情</b> */}
+              {
+                product.tags && product.tags.length > 0 ? (
+                  <div style={{marginBottom: '10px'}}>
+                    {
+                      product.tags.map((aTag, index)=>{
+                        return <Tag key={index}>{aTag}</Tag>
+                      })
+                    }
+                  </div>
+                ) : null 
+              }
               <div>{getCategoryInfo(product.category)}</div>
               {product.description}
               {/* {inventoryData.length > 0 ? getAddToCartForm() : null} */}

@@ -36,7 +36,8 @@ const App = () => {
       >
         <div className="App">
             <Switch>
-              <Route component={Components['Products']} exact={true} path={'/'}/>
+              <Route component={Components['Main']} exact={true} path={'/'}/>
+              <Route component={Components['Products']} exact={true} path={'/products'}/>
               <Route component={Components['Products']} exact={true} path={'/category/:_id'}/>
               <Route component={Components['Orders']} exact={true} path={'/searchorder'}/> 
               <Route component={NotFound} />

@@ -20,6 +20,7 @@ const GET_ORDERS_QUERY = gql`
       items
       total
       customer
+      remark
       paid
       sentOut
       trackingNum

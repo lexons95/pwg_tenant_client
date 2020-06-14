@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import ProductCard from './component/ProductCard';
 import ProductInfo from './component/ProductInfo';
-import { useConfigCache, configId } from '../../utils/Constants';
+import { useConfigCache, configId, stockLocation } from '../../utils/Constants';
 import Loading from '../../utils/component/Loading';
 
 const GET_PRODUCTS_QUERY = gql`
@@ -17,10 +17,28 @@ const GET_PRODUCTS_QUERY = gql`
       updatedAt
       name
       description
+      type
       category
+      tags
       variants
       published
       images
+    }
+  }
+`;
+
+const READ_PRODUCT_INVENTORY_QUERY = gql`
+  query inventory($filter: JSONObject, $configId: String) {
+    inventory(filter: $filter, configId: $configId) {
+      _id
+      createdAt
+      updatedAt
+      price
+      stock
+      weight
+      variants
+      published
+      productId
     }
   }
 `;
@@ -33,10 +51,24 @@ const Products = (props) => {
     variables: {
       filter: {
         filter: {
-          published: true
+          published: true,
+          type: stockLocation
         }
       },
       configId: configId
+    }
+  });
+
+  const { data: inventoryData, loading: loadingInventory, error: inventoryError, refetch: refetchInventory } = useQuery(READ_PRODUCT_INVENTORY_QUERY, {
+    fetchPolicy: "cache-and-network",
+    variables: {
+      configId: configId
+    },
+    onError: (error) => {
+      console.log("inventoryData error", error)
+    },
+    onCompleted: (result) => {
+      // console.log('refetched inventory', result)
     }
   });
   
@@ -97,7 +129,12 @@ const Products = (props) => {
           <ul className="products-container">
             {getProducts(data)}
           </ul>
-          : <Empty/>
+          : 
+          (
+            <div style={{height: '70vh', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+              <Empty description={'暂无'} />
+            </div>
+          )
       }
       {
         productInfoModal ? (

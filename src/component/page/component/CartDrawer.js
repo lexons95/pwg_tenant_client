@@ -297,17 +297,19 @@ const CartDrawer = (props) => {
   
   const onSubmit = (values) => {
     console.log('onSubmit', values)
+    const { remark, ...restValues } = values;
     let cartCalculationResult = cartCalculation(cartItems, deliveryFee);
     let finalItems = cartItems.map((anItem)=>{
-      const { stock, ...rest } = anItem;
-      return rest
+      const { stock, ...restItem } = anItem;
+      return restItem
     })
     let orderObj = {
       items: finalItems,
       total: cartCalculationResult.total,
       subTotal: cartCalculationResult.subTotal,
       deliveryFee: cartCalculationResult.deliveryFee,
-      customer: values
+      customer: restValues,
+      remark: remark
     }    
     if (!submitDisabled) {
       createOrder({
@@ -317,7 +319,7 @@ const CartDrawer = (props) => {
         }
       })
     }
-    setCustomerCache(values);
+    setCustomerCache(restValues);
 
   }
 
@@ -391,6 +393,9 @@ const CartDrawer = (props) => {
                     <Input/>
                   </Form.Item>
                 </Space>
+                <Form.Item name={'remark'} label={'备注'}>
+                  <Input.TextArea/>
+                </Form.Item>
                 <Form.Item style={{textAlign:'right'}}>
                   <Button onClick={()=>{form.resetFields()}} style={{marginRight:'10px'}}>重置</Button>
                   <Button type="primary" onClick={()=>{form.submit()}} disabled={submitDisabled}>下单</Button>

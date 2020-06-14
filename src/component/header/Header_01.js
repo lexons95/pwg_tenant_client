@@ -68,6 +68,10 @@ const Header_01 = (props) => {
     let result = [
       {
         key: '/',
+        name: '主页'
+      },
+      {
+        key: '/products',
         name: '全部产品'
       }
     ];

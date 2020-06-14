@@ -82,6 +82,7 @@ const OrderInfo = (props) => {
             <Descriptions.Item label="收件地址">{order.customer.address}</Descriptions.Item>
             <Descriptions.Item label="邮编">{order.customer.postcode}</Descriptions.Item>
             <Descriptions.Item label="省份">{order.customer.province}</Descriptions.Item>
+            <Descriptions.Item label="备注">{order.remark ? order.remark : '-'}</Descriptions.Item>
         </Descriptions>
         <Divider orientation="left">购买列表</Divider> 
         <List
@@ -103,20 +104,26 @@ const OrderInfo = (props) => {
             </div>
           )}
         />
+
+        <div style = {{textAlign:'center'}}>
+          <h1>扫码付款后记得备注名字，后台需要确认订单</h1>
+        </div>
+
         <div className="orderInfo-extra">
-          {configCache.paymentQRImage ? 
+          {
+            configCache.paymentQRImage ? 
             <div style={{textAlign:'center',flexGrow:1}}>
               <img src={configCache.imageSrc + configCache.paymentQRImage} />
             </div>
             : null
           }
-        {
-          order.sentOut && order.trackingNum ? (
-            <div style={{textAlign:'center',flexGrow:1}}>
-              <iframe src={`https://m.kuaidi100.com/app/query/?coname=indexall&nu=${order.trackingNum}`} style={{border:'none', maxWidth:'400px', height: '600px', textAlign:'center'}}></iframe>
-            </div>
-          ) : null
-        }
+          {
+            order.sentOut && order.trackingNum ? (
+              <div style={{textAlign:'center',flexGrow:1}}>
+                <iframe src={`https://m.kuaidi100.com/app/query/?coname=indexall&nu=${order.trackingNum}`} style={{border:'none', maxWidth:'400px', height: '600px', textAlign:'center'}}></iframe>
+              </div>
+            ) : null
+          }
         </div>
       </React.Fragment>
       : "Not found"
