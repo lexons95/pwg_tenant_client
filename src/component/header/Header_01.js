@@ -67,7 +67,7 @@ const Header_01 = (props) => {
   const getMenuData = () => {
     let result = [
       {
-        key: '/main',
+        key: '/',
         name: '主页'
       },
       {

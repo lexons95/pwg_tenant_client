@@ -64,6 +64,7 @@ const columns = [
     title: '套餐',
     dataIndex: 'package',
     key: 'package',
+    width: '120px'
   },
   {
     title: '未参保预计缴纳税费',
@@ -78,51 +79,48 @@ const columns = [
 ];
 
   return (
-    <div>
+    <div style ={{padding: '35px'}}>
       <div>
-        <ul style = {{listStyle: 'none'}}>
-          <li>年中回馈-海淘来袭</li>
-          <li>皇室尊享主题季</li>
-          <li><p>马男放水，补贴领到手软。为了回馈广大老客户，解决缺货问题，我们扬起了海淘的大帆，马男为了让大家都能顺利上船，对邮费和税费进行了大力补贴。</p></li>
+          <h1>年中回馈-海淘来袭</h1>
+          <h2>皇室尊享主题季</h2>
+          <div>马男放水，补贴领到手软。为了回馈广大老客户，解决缺货问题，我们扬起了海淘的大帆，马男为了让大家都能顺利上船，对邮费和税费进行了大力补贴。</div>
 
-        </ul>
+
       </div>
 
-      <div>
-        <>
+      <div style = {{textAlign: 'left', marginTop: '40px'}}>
+
           <Divider orientation="left">具体活动如下</Divider>
           <List
             size="small"
-            header={<div>可选套餐</div>}
-            footer={<div>Share & Enjoy</div>}
+            header={<div style = {{fontWeight: 'bold'}}>可选套餐</div>}
+            footer={<div style = {{textAlign: 'center'}}>Share & Enjoy</div>}
             bordered
 
             dataSource={data}
             renderItem={item => <List.Item>{item}</List.Item>}
           />
-        </>
 
-        <>
-          <Divider orientation="left">海淘小贴士</Divider>
+
+          <Divider orientation="left" style = {{marginTop: '40px'}}>海淘小贴士</Divider>
           <List
             size="small"
-            header={<div>一. 关于运输和邮费</div>}
+            header={<div style = {{fontWeight: '120px', textAlign:'left'}}>一. 关于运输和邮费</div>}
             dataSource={des1}
             renderItem={item => <List.Item>{item}</List.Item>}
           />
           <List
             size="small"
-            header={<div>二. 关于税险包</div>}
+            header={<div style = {{fontWeight: 'bold'}}>二. 关于税险包</div>}
             dataSource={des2}
             renderItem={item => <List.Item>{item}</List.Item>}
           />
-        </>
 
         </div>
 
-        <div>
-          <Divider orientation="left">海关税费</Divider>
-          <Table dataSource={dataSource} columns={columns}/>
+        <div style = {{marginTop: '40px'}}>
+          <Divider orientation="left" >海关税费</Divider>
+          <Table dataSource={dataSource} columns={columns} pagination = {false}/>
         </div>
 
     </div>
