@@ -38,7 +38,7 @@ const App = () => {
             <Switch>
               <Route component={Components['Products']} exact={true} path={'/'}/>
               <Route component={Components['Products']} exact={true} path={'/category/:_id'}/>
-              <Route component={Components['Homepage']} exact={true} path={'/Homepage'}/>
+              <Route component={Components['Main']} exact={true} path={'/main'}/>
 
               <Route component={Components['Orders']} exact={true} path={'/searchorder'}/>
               <Route component={NotFound} />
