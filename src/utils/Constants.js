@@ -11,11 +11,11 @@ export const configId = "mananml";
 export const defaultImage_system = require("./noImageFound.png");
 
 // 0: local (国内), 1: oversea (国外)
-export const stockLocation = "0";
-// export const MIDDLETIER_URL = "http://localhost:3000/graphql";
+export const stockLocation = "1";
+export const MIDDLETIER_URL = "http://localhost:3000/graphql";
 
 // this is for lightsail Server
-export const MIDDLETIER_URL = "http://15.165.150.23/graphql";
+// export const MIDDLETIER_URL = "http://15.165.150.23/graphql";
 
 export const getAllProductCategory = (products) => {
   let result = [];
