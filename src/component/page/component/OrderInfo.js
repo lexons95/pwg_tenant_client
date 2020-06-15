@@ -40,9 +40,7 @@ const OrderInfo = (props) => {
     )
   }
 
-  let extraCharges = [
-
-  ]
+  let extraCharges = []
   let foundDutyTaxInsurance = order && order.charges && order.charges.length > 0 ? order.charges.find((aCharge)=>{return aCharge.code && aCharge.code == "dutyTaxInsurance"}) : null
   if (foundDutyTaxInsurance != null) {
     extraCharges.push(foundDutyTaxInsurance)
