@@ -16,7 +16,7 @@ const Main = (props) => {
 const des1 = [
 '（1）邮费：一公斤以内邮费80人民币，一到二公斤邮费96人民币，单个包裹重量不得超过2公斤.',
 '（2）下单后48小时内出国际快递单号，鉴于目前疫情还未平息，本地国际物流每周五清单运输。',
-'（3）整个物流时间为10-14个工作日。'
+'（3）整个物流时间为10-15个工作日。'
 ];
 
 const des2 = [
@@ -29,31 +29,31 @@ const des2 = [
 const dataSource = [
   {
     key: '1',
-    package: 'A 6包',
+    package: 'A （5+1）包',
     tax: 60,
     fee: 15,
   },
   {
     key: '2',
-    package: 'B 12包',
+    package: 'B （10+2）包',
     tax: 120,
     fee: 30,
   },
   {
     key: '3',
-    package: 'C 18包',
+    package: 'C （15+3）包',
     tax: 180,
     fee: 55,
   },
   {
     key: '4',
-    package: 'D 24包',
+    package: 'D （20+4）包',
     tax: 240,
     fee: 70,
   },
   {
     key: '5',
-    package: 'E 30包',
+    package: 'E （25+5）包',
     tax: 300,
     fee: 90,
   },
@@ -64,7 +64,7 @@ const columns = [
     title: '套餐',
     dataIndex: 'package',
     key: 'package',
-    width: '120px'
+    width: '130px'
   },
   {
     title: '未参保预计缴纳税费',
