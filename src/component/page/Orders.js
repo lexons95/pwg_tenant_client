@@ -31,16 +31,6 @@ const GET_ORDERS_QUERY = gql`
   }
 `;
 
-const CANCEL_ORDER_QUERY = gql`
-  mutation cancelOrder($_id: String!) {
-    cancelOrder(_id: $_id) {
-      success
-      message
-      data
-    }
-  }
-`;
-
 const Orders = (props) => {
 
   const [ orderModalDisplay, setOrderModalDisplay ] = useState(false);
