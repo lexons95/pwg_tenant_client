@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { Modal, Carousel, Select, Button, Input, Divider, Empty, Form, Tag } from 'antd';
+import { Modal, Carousel, Select, Button, Input, Divider, Empty, Form, Tag, message } from 'antd';
 import { LeftOutlined, RightOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { useLazyQuery } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
@@ -294,11 +294,13 @@ const ProductInfo = (props) => {
             })
             newCartObj['items'] = newCartItems;
             setCartCache(newCartObj);
-            showMessage({type:'success',message:"添加成功"});
+            message.success('添加成功');
+            // showMessage({type:'success',message:"添加成功"});
             
           }
           else {
-            showMessage({type:'error',message:"添加失败"});
+            message.error('添加失败');
+            // showMessage({type:'error',message:"添加失败"});
           }
         }
         else {
@@ -314,6 +316,8 @@ const ProductInfo = (props) => {
               product: {
                 _id: product._id,
                 name: product.name,
+                type: product.type,
+                category: product.category.length > 0 ? product.category[0].name : "",
                 image: productFavImage ? productFavImage.name : ""
               },
               variant: variantsResult.variants
@@ -321,10 +325,12 @@ const ProductInfo = (props) => {
             newCartItems.push(newCartItem);
             newCartObj['items'] = newCartItems;
             setCartCache(newCartObj);
-            showMessage({type:'success',message:"添加成功"});
+            message.success('添加成功');
+            // showMessage({type:'success',message:"添加成功"});
           }
           else {
-            showMessage({type:'error',message:"添加失败"});
+            message.error('添加失败');
+            // showMessage({type:'error',message:"添加失败"});
           }
         }
       }

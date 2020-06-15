@@ -6,26 +6,9 @@ import { useParams } from 'react-router-dom';
 
 import ProductCard from './component/ProductCard';
 import ProductInfo from './component/ProductInfo';
-import { useConfigCache, configId, stockLocation } from '../../utils/Constants';
+import { useConfigCache, configId } from '../../utils/Constants';
 import Loading from '../../utils/component/Loading';
-
-const GET_PRODUCTS_QUERY = gql`
-  query products($filter: JSONObject, $configId: String!) {
-    products(filter: $filter, configId: $configId) {
-      _id
-      createdAt
-      updatedAt
-      name
-      description
-      type
-      category
-      tags
-      variants
-      published
-      images
-    }
-  }
-`;
+import { useProductsQuery } from '../../utils/customHook';
 
 const READ_PRODUCT_INVENTORY_QUERY = gql`
   query inventory($filter: JSONObject, $configId: String) {
@@ -47,17 +30,7 @@ const Products = (props) => {
   const routerParams = useParams();
   const [ productInfoModal, setProductInfoModal ] = useState(false);
   const [ selectedProduct, setSelectedProduct ] = useState(null);
-  const { data, error, loading } = useQuery(GET_PRODUCTS_QUERY,{
-    variables: {
-      filter: {
-        filter: {
-          published: true,
-          type: stockLocation
-        }
-      },
-      configId: configId
-    }
-  });
+  const productsResult = useProductsQuery();
 
   const { data: inventoryData, loading: loadingInventory, error: inventoryError, refetch: refetchInventory } = useQuery(READ_PRODUCT_INVENTORY_QUERY, {
     fetchPolicy: "cache-and-network",
@@ -84,18 +57,17 @@ const Products = (props) => {
     setSelectedProduct(product)
   }
 
-  if (loading) return "loading";
-  if (error) return `error: ${error}`;
+  if (productsResult == null) return null;
 
   let categoryId = null;
   if (Object.keys(routerParams).length > 0) {
     categoryId = routerParams['_id'];
   }
   
-  const getProducts = (dataInput) => {
+  const getProducts = (items) => {
     let result = [];
 
-    dataInput.products.map((aProduct, index)=>{
+    items.map((aProduct, index)=>{
       if (categoryId != null) {
         if (aProduct.category.length > 0) {
           let foundCategory = aProduct.category.find((aCategory)=>{
@@ -122,12 +94,15 @@ const Products = (props) => {
     })
     return result;
   }
+
+  let getProductsResult = getProducts(productsResult);
   return (
     <div>
+      <div style={{textAlign:'left', margin: '16px 0 0 16px'}}>Found {getProductsResult.length} items</div>
       {
-        data.products.length > 0 && getProducts(data).length > 0 ?
+        productsResult.length > 0 && getProductsResult.length > 0 ?
           <ul className="products-container">
-            {getProducts(data)}
+            {getProductsResult}
           </ul>
           : 
           (

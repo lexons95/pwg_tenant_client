@@ -19,6 +19,7 @@ const GET_ORDERS_QUERY = gql`
       updatedAt
       items
       total
+      charges
       customer
       remark
       paid

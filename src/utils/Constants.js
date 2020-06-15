@@ -55,67 +55,216 @@ export const getInventoryVariants = (productVariants, inventoryVariants) => {
   };
 }
 
-export const cartCalculation = (items = [], deliveryFee = 0) => {
-  let result = {}
+const getTotalFromItems = (items, property, initial = 0) => {
+  let total = initial;
+  items.map((anItem)=>{
+    if (property == 'weight') {
+      total += (anItem[property] * anItem['qty']);
+    }
+    else {
+      total += anItem[property];
+    }
+  });
+  return total;
+}
+
+const conditionChecker = (items = [], condition = null, initial = 0) => {
+  let checkedConditionResult = null;
+
+  if (condition != null) {
+    if (condition.type == 'range') {
+      let minValue = condition.min ? condition.min : null;
+      let maxValue = condition.max ? condition.max : null;
+  
+      let total = getTotalFromItems(items, condition.property, initial);
+  
+      let passedMin = minValue == null ? true : false;
+      let passedMax = maxValue == null ? true : false;
+  
+      if (minValue > maxValue && (minValue != null && maxValue != null)) {
+        passedMin = false;
+        passedMax = false;
+      }
+      else {
+        if (minValue != null && total > minValue) {
+          passedMin = true;
+        }
+        if (maxValue != null && total <= maxValue) {
+          passedMax = true;
+        }
+      }
+  
+      if (passedMin && passedMax) {
+        checkedConditionResult = {
+          ...condition,
+          success: true
+        };
+      }
+      else {
+        checkedConditionResult = {
+          ...condition,
+          success: false,
+          message: condition.property + " not within range"
+        };
+      }
+    }
+
+  }
+
+  return checkedConditionResult;
+}
+
+export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) => {
+  let result = {
+    type: stockLocation,
+    items: [],
+    deliveryFee: 0,
+    charges: [],
+    total: 0,
+    subTotal: 0,
+    allowOrder: false,
+    totalWeight: 0
+  }
   let subTotal = 0;
   let total = 0;
 
-  items.map((anItem)=>{
-    subTotal += (anItem.price * anItem.qty)
-  })
+  if (items.length > 0) {
 
-  total = subTotal + deliveryFee;
-  result = {
-    items: items,
-    deliveryFee: deliveryFee,
-    total: total,
-    subTotal: subTotal
-  }
-
-
-console.log('itemsitems',items)
-  if (stockLocation == '1') {
-    /*
-    A 5 草 free 1 皇室 SXB 15
-    B 5 草 free 2 皇室 SXB 30
-    C 5 草 free 3 皇室 SXB 55
-    D 5 草 free 4 皇室 SXB 70
-    E 5 草 free 5 皇室 SXB 90
-
-    weight max 2kg
-    0~1 80
-    1~2 96
-
-    order charges
-    {
-      value: Float,
-
-    }
-    */
-
-    let promotion = {
-      code: "MS"
-    }
-
-    // delivery calculation options
-    // static
-    // by weight (conditions)
-    // by total price (conditions)
-    const calcOptions = [
-      {
-
-      }
-    ]
-    // order calculation methods
-    let maxWeight = 2000;
-    const deliveryMethod1 = () => {
-      const ranges = [
+    items.map((anItem)=>{
+      subTotal += (anItem.price * anItem.qty)
+    })
+  
+    if (stockLocation == '1') {
+      /*
+      max weight: 2kg
+  
+      delivery fee range: 
+      0 ~ 1 kg (80)
+      1 ~ 2 kg (96)
+  
+      custom conditions:
+      A 5 草 free 1 皇室 SXB 15
+      B 10 草 free 2 皇室 SXB 30
+      C 15 草 free 3 皇室 SXB 55
+      D 20 草 free 4 皇室 SXB 70
+      E 25 草 free 5 皇室 SXB 90
+      */
+  
+      // console.log('itemsitems',items)
+  
+      // condition to allow placing order
+      const placeOrderConditions = [
         {
-
+          type: 'range',
+          property: 'weight',
+          min: 0,
+          max: 2000
         }
       ]
+  
+      const deliveryFeeMethods = [
+        {
+          code: 'deliveryFee',
+          type: 'static',
+          value: 123
+        },
+        {
+          code: 'deliveryFee',
+          type: 'dynamic',
+          value: 80,
+          conditions: [
+            {
+              type: 'range',
+              property: 'weight',
+              min: 0,
+              max: 1000,
+              value: 80
+            },
+            {
+              type: 'range',
+              property: 'weight',
+              min: 1000,
+              max: 2000,
+              value: 96
+            }
+          ]
+        }
+      ]
+  
+      // const customChargesFields = [
+      //   {
+      //     type: 'boolean',
+      //     property: 'qty',
+      //     formula: (items)
+      //   }
+      // ]
+      // A 5 草 free 1 皇室 SXB 15
+      // B 10 草 free 2 皇室 SXB 30
+      // C 15 草 free 3 皇室 SXB 55
+      // D 20 草 free 4 皇室 SXB 70
+      // E 25 草 free 5 皇室 SXB 90
+      
+      let initialWeight = 300;
+      let allowPlacingOrder = true;
+      let message = "";
+      let deliveryFeeResult = null;
+  
+      if (placeOrderConditions.length == 0) {
+        allowPlacingOrder = true;
+      }
+      else {
+        let checkedOrderResult = conditionChecker(items, placeOrderConditions[0], initialWeight);
+        if (checkedOrderResult != null && !checkedOrderResult.success) {
+          allowPlacingOrder = false;
+          message += '\n' + checkedOrderResult.message;
+        }
+      }
+  
+      // custom charges
+      // check delivery fee
+      let deliveryFeeType = 'dynamic';
+      let foundMethod = deliveryFeeMethods.find((aMethod)=>{return aMethod.type == deliveryFeeType})
+      if (foundMethod) {
+        // conditions's order affect the result, should arrange from lower range to higher range (deliveryFeeMethods[1].conditions)
+        foundMethod.conditions && foundMethod.conditions.map((aCondition)=>{
+          let checkResult = conditionChecker(items, aCondition, initialWeight);
+          if (checkResult != null && checkResult.success) {
+            deliveryFeeResult = checkResult;
+          }
+        })
+      }
+      
+  
+      let totalWeight = getTotalFromItems(items, 'weight', 300);
+      console.log('totalWeight',totalWeight)
+  
+      let allCharges = [
+        {
+          code: 'deliveryFee',
+          name: '邮费',
+          value: deliveryFeeResult != null ? deliveryFeeResult.value : null
+        },
+        ...extraCharges
+      ]
+  
+      total = subTotal + deliveryFee;
+      allCharges.map((aCharge)=>{
+        if (aCharge.value != null && aCharge.code == 'dutyTaxInsurance') {
+          total += aCharge.value;
+        }
+      });
+  
+      result = {
+        type: stockLocation,
+        items: items,
+        deliveryFee: deliveryFeeResult != null ? deliveryFeeResult.value : null,
+        charges: allCharges,
+        total: total,
+        subTotal: subTotal,
+        allowOrder: allowPlacingOrder,
+        totalWeight: totalWeight
+      }
     }
-
   }
 
   return result;

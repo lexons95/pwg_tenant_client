@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import gql from "graphql-tag";
 import { useQuery, useMutation, useApolloClient } from "@apollo/react-hooks";
 
-import { configId } from './Constants';
+import { configId, stockLocation } from './Constants';
 // const GET_PRODUCTS_QUERY = gql`
 //   query () {
 //     products() {
@@ -52,11 +52,13 @@ const addConfigIdVariable = (options) => {
     if (result['variables']['filter']) {
       if (result['variables']['filter']['filter']) {
         result['variables']['filter']['filter']['published'] = true;
+        result['variables']['filter']['filter']['type'] = stockLocation;
       }
       else {
         result['variables']['filter'] = {
           filter: {
-            published: true
+            published: true,
+            type: stockLocation
           }
         }
       }
@@ -64,7 +66,8 @@ const addConfigIdVariable = (options) => {
     else {
       result['variables']['filter'] = {
         filter: {
-          published: true
+          published: true,
+          type: stockLocation
         }
       }
     }
@@ -73,7 +76,8 @@ const addConfigIdVariable = (options) => {
     result['variables'] = { 
       filter: {
         filter: {
-          published: true
+          published: true,
+          type: stockLocation
         }
       },
       configId: configId 
@@ -90,7 +94,9 @@ const GET_PRODUCTS_QUERY = gql`
       updatedAt
       name
       description
+      type
       category
+      tags
       variants
       published
       images
