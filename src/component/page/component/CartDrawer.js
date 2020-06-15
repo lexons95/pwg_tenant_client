@@ -69,6 +69,7 @@ const CartDrawer = (props) => {
           handleOrderModalDisplayOpen(result.createOrder.data)
           showMessage({type:'success',message:"下单成功"});
           closeDrawer();
+          setCurrentCollapsePanel('1')
         }
         else {
           showMessage({type:'error',message:"下单失败"});
@@ -675,6 +676,7 @@ const CartDrawer = (props) => {
                 } rules={foundInsurance.free && foundInsurance.free > 0 ? [{ required: true, message:"请输入赠品口味及数量" }] : []}>
                   <Input.TextArea
                     placeholder={'可填写赠品口味'}
+                    defaultValue={""}
                     rows={4}
                   />
                 </Form.Item>

@@ -236,7 +236,7 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
       
   
       let totalWeight = getTotalFromItems(items, 'weight', 300);
-      console.log('totalWeight',totalWeight)
+      // console.log('totalWeight',totalWeight)
   
       let allCharges = [
         {
@@ -247,9 +247,9 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
         ...extraCharges
       ]
   
-      total = subTotal + deliveryFee;
+      total = subTotal;
       allCharges.map((aCharge)=>{
-        if (aCharge.value != null && aCharge.code == 'dutyTaxInsurance') {
+        if (aCharge.value != null) {
           total += aCharge.value;
         }
       });
