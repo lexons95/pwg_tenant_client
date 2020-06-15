@@ -39,7 +39,7 @@ const CartDrawer = (props) => {
   const [ cartStockError, setCartStockError ] = useState([]);
   const [ currentCollapsePanel, setCurrentCollapsePanel ] = useState('1');
 
-  const [ acceptInsurance, setAcceptInsurance ] = useState(false);
+  const [ acceptInsurance, setAcceptInsurance ] = useState(true);
 
   const productsResult = useProductsQuery();
 
@@ -451,7 +451,7 @@ const CartDrawer = (props) => {
           <table style={{width:'100%'}}>
             <tbody>
               <tr>
-                <th colspan="2">
+                <th colSpan="2">
                   本次活动赠送产品是皇室系列手卷草，每种口味限定10包，送完为止，如果下单时预留的口味没有货的话，客服会联系进行调换。
                 </th>
               </tr>

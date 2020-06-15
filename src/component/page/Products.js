@@ -35,6 +35,11 @@ const Products = (props) => {
   const { data: inventoryData, loading: loadingInventory, error: inventoryError, refetch: refetchInventory } = useQuery(READ_PRODUCT_INVENTORY_QUERY, {
     fetchPolicy: "cache-and-network",
     variables: {
+      filter: {
+        filter: {
+          published: true
+        }
+      },
       configId: configId
     },
     onError: (error) => {
@@ -68,6 +73,13 @@ const Products = (props) => {
     let result = [];
 
     items.map((aProduct, index)=>{
+      let foundInventories = [];
+      if (inventoryData && inventoryData.inventory) {
+        foundInventories = inventoryData.inventory.filter((anInventory)=>{
+          return anInventory.productId == aProduct._id;
+        })
+      } 
+      
       if (categoryId != null) {
         if (aProduct.category.length > 0) {
           let foundCategory = aProduct.category.find((aCategory)=>{
@@ -77,7 +89,7 @@ const Products = (props) => {
           if (foundCategory) {
             result.push(
               <li key={index} className="products-card-item">
-                <ProductCard product={aProduct} onClick={()=>{handleOnClickProduct(aProduct)}}/>
+                <ProductCard product={aProduct} inventory={foundInventories} onClick={()=>{handleOnClickProduct(aProduct)}}/>
               </li>
             )
           }
@@ -86,7 +98,7 @@ const Products = (props) => {
       else {
         result.push(
           <li key={index} className="products-card-item">
-            <ProductCard product={aProduct} onClick={()=>{handleOnClickProduct(aProduct)}}/>
+            <ProductCard product={aProduct} inventory={foundInventories} onClick={()=>{handleOnClickProduct(aProduct)}}/>
           </li>
         )
 

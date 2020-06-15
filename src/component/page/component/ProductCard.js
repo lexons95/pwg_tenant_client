@@ -3,7 +3,7 @@ import { Tag, Tooltip } from 'antd';
 import { useConfigCache } from '../../../utils/Constants';
 
 const ProductCard = (props) => {
-  const { product, onClick } = props;
+  const { product, inventory = [], onClick } = props;
   const config = useConfigCache();
 
   const getProductImages = () => {
@@ -23,6 +23,17 @@ const ProductCard = (props) => {
     onClick()
   }
 
+  const getTotalStock = () => {
+    let total = 0;
+    if (inventory.length > 0) {
+      inventory.map((anInventory)=>{
+        total += anInventory.stock
+      })
+    }
+    return total;
+  }
+
+  let totalStock = getTotalStock();
 
   return (
     <div className="productCard-container" onClick={onCardClicked}>
@@ -33,6 +44,10 @@ const ProductCard = (props) => {
           <Tooltip title={product.name}>
             <div className="productCard-title">{product.name}</div>
           </Tooltip>
+          {
+            totalStock > 0 ? <span>库存: {getTotalStock()}</span> : "暂无"
+          }
+          
         </div>
       </div>
     </div>
