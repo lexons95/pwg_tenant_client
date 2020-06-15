@@ -26,6 +26,7 @@ const GET_ORDERS_QUERY = gql`
       sentOut
       trackingNum
       deliveryFee
+      status
     }
   }
 `;
