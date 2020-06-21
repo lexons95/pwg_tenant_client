@@ -1,21 +1,13 @@
 
-import React from 'react';
-import { useState, useEffect } from 'react';
-import gql from "graphql-tag";
-import { useQuery, useMutation, useApolloClient } from "@apollo/react-hooks";
+import { setCartCache, getConfigCache } from './customHook';
 
-import DefaultClientAPI from '../index';
-import Loading from './component/Loading';
-
-export const configId = "mananml";
 export const defaultImage_system = require("./noImageFound.png");
 
 // 0: local (国内), 1: oversea (国外)
-export const stockLocation = "1";
-// export const MIDDLETIER_URL = "http://localhost:3000/graphql";
-
-// this is for lightsail Server
-export const MIDDLETIER_URL = "http://15.165.150.23/graphql";
+// export const stockLocation = "1";
+// export const configId = "mananml";
+export const stockLocation = "0";
+export const configId = "klklvapor";
 
 export const getAllProductCategory = (products) => {
   let result = [];
@@ -68,7 +60,7 @@ const getTotalFromItems = (items, property, initial = 0) => {
   return total;
 }
 
-const conditionChecker = (items = [], condition = null, initial = 0) => {
+const conditionRangeChecker = (items = [], condition = null, initial = 0) => {
   let checkedConditionResult = null;
 
   if (condition != null) {
@@ -94,24 +86,181 @@ const conditionChecker = (items = [], condition = null, initial = 0) => {
         }
       }
   
-      if (passedMin && passedMax) {
-        checkedConditionResult = {
-          ...condition,
-          success: true
-        };
-      }
-      else {
-        checkedConditionResult = {
-          ...condition,
-          success: false,
-          message: condition.property + " not within range"
-        };
-      }
+      let success = passedMin && passedMax;
+      checkedConditionResult = {
+        ...condition,
+        success: success,
+        message: !success ? condition.property + " not within range" : ""
+      };
     }
 
   }
 
   return checkedConditionResult;
+}
+
+const calculations = (items = [], conditions = []) => {
+  let result = {
+    //type: stockLocation,
+    items: [],
+    charges: [],
+    subTotal: 0,
+    total: 0,
+    totalWeight: 0
+  }
+
+  if (items.length > 0) {
+
+    if (conditions.length > 0) {
+      conditions.map((aCondition, index)=>{
+        if (aCondition.code) {
+          switch(aCondition.code) {
+            case 'deliveryFee': 
+
+              break;
+
+            default:
+
+              break;
+          }
+        }
+      })
+    }
+    else {
+  
+    }
+  }
+
+
+  return result;
+}
+
+const cartCalculation2 = (items = [], extraCharges = []) => {
+  let result = {
+    type: stockLocation,
+    items: [],
+    charges: [],
+    subTotal: 0,
+    total: 0,
+    totalWeight: 0
+  }
+
+  let subTotal = 0;
+  let total = 0;
+
+  if (items.length > 0) {
+    items.map((anItem)=>{
+      subTotal += (anItem.price * anItem.qty)
+    })
+  
+    if (stockLocation == '1') {
+
+      // condition to allow placing order
+      const placeOrderConditions = [
+        {
+          type: 'range',
+          property: 'weight',
+          min: 0,
+          max: 2000
+        }
+      ]
+  
+      const deliveryFeeMethods = [
+        {
+          code: 'deliveryFee',
+          type: 'fixed',
+          property: 'weight',
+          conditions: [
+            {
+              min: 0,
+              max: 2000,
+              value: 123
+            }
+          ]
+        },
+        {
+          code: 'deliveryFee',
+          type: 'range',
+          conditions: [
+            {
+              min: 0,
+              max: 1000,
+              value: 80
+            },
+            {
+              min: 1000,
+              max: 2000,
+              value: 96
+            }
+          ]
+        }
+      ]
+        
+      let initialWeight = 300;
+      let allowPlacingOrder = true;
+      let message = "";
+      let deliveryFeeResult = null;
+  
+      if (placeOrderConditions.length == 0) {
+        allowPlacingOrder = true;
+      }
+      else {
+        let checkedOrderResult = conditionRangeChecker(items, placeOrderConditions[0], initialWeight);
+        if (checkedOrderResult != null && !checkedOrderResult.success) {
+          allowPlacingOrder = false;
+          message += '\n' + checkedOrderResult.message;
+        }
+      }
+  
+      // custom charges
+      // check delivery fee
+      let deliveryFeeType = 'dynamic';
+      let foundMethod = deliveryFeeMethods.find((aMethod)=>{return aMethod.type == deliveryFeeType})
+      if (foundMethod) {
+        // conditions's order affect the result, should arrange from lower range to higher range (deliveryFeeMethods[1].conditions)
+        foundMethod.conditions && foundMethod.conditions.map((aCondition)=>{
+          let checkResult = conditionRangeChecker(items, aCondition, initialWeight);
+          if (checkResult != null && checkResult.success) {
+            deliveryFeeResult = checkResult;
+          }
+        })
+      }
+      
+  
+      let totalWeight = getTotalFromItems(items, 'weight', 300);
+      // console.log('totalWeight',totalWeight)
+  
+      let allCharges = [
+        {
+          code: 'deliveryFee',
+          name: '邮费',
+          value: deliveryFeeResult != null ? deliveryFeeResult.value : null
+        },
+        ...extraCharges
+      ]
+  
+      total = subTotal;
+      allCharges.map((aCharge)=>{
+        if (aCharge.value != null) {
+          total += aCharge.value;
+        }
+      });
+  
+      result = {
+        type: stockLocation,
+        items: items,
+        deliveryFee: deliveryFeeResult != null ? deliveryFeeResult.value : null,
+        charges: allCharges,
+        total: total,
+        subTotal: subTotal,
+        allowOrder: allowPlacingOrder,
+        totalWeight: totalWeight
+      }
+    }
+  }
+
+  return result;
+
 }
 
 export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) => {
@@ -213,7 +362,7 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
         allowPlacingOrder = true;
       }
       else {
-        let checkedOrderResult = conditionChecker(items, placeOrderConditions[0], initialWeight);
+        let checkedOrderResult = conditionRangeChecker(items, placeOrderConditions[0], initialWeight);
         if (checkedOrderResult != null && !checkedOrderResult.success) {
           allowPlacingOrder = false;
           message += '\n' + checkedOrderResult.message;
@@ -227,7 +376,7 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
       if (foundMethod) {
         // conditions's order affect the result, should arrange from lower range to higher range (deliveryFeeMethods[1].conditions)
         foundMethod.conditions && foundMethod.conditions.map((aCondition)=>{
-          let checkResult = conditionChecker(items, aCondition, initialWeight);
+          let checkResult = conditionRangeChecker(items, aCondition, initialWeight);
           if (checkResult != null && checkResult.success) {
             deliveryFeeResult = checkResult;
           }
@@ -270,213 +419,51 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
   return result;
 
 }
-const GET_USER_CONFIG_QUERY = gql`
-  query userConfig($configId: String!) {
-    userConfig(configId: $configId) {
-        success
-        message
-        data
-    }
-  }
-`
 
-const GET_CONFIG_CACHE_QUERY = gql`
-  query config {
-    config @client {
-      _id
-      configId
-      defaultImage_system
-      defaultImage
-      imageSrc
-      paymentQRImage
-      server
-      profile
-      currencyUnit
-      delivery
-    }
+export const cartCalculation_1 = (items = [], deliveryFee = 0, extraCharges = []) => {
+  let result = {
+    type: stockLocation,
+    items: [],
+    deliveryFee: 0,
+    charges: [],
+    total: 0,
+    subTotal: 0,
+    allowOrder: false,
+    totalWeight: 0
   }
-`
+  let subTotal = 0;
+  let total = 0;
 
-const SET_CONFIG_CACHE_QUERY = gql`
-  query config {
-    config {
-      _id
-      configId
-      defaultImage_system
-      defaultImage
-      imageSrc
-      paymentQRImage
-      server
-      profile
-      currencyUnit
-      delivery
-    }
-  }
-`
+  if (items.length > 0) {
 
-const handleConfigOuput = (config = null) => {
-  let result = null;
-  if (config) {
-    result = {...config}
-    let newDefaultImage = defaultImage_system;
-    if (result.defaultImage && result.defaultImage != "") {
-      newDefaultImage = result.imageSrc + result.defaultImage;
+    items.map((anItem)=>{
+      subTotal += (anItem.price * anItem.qty)
+    })
+  
+    let configCache = getConfigCache();
+    let deliveryFee = configCache && configCache.config && configCache.config.delivery ? configCache.config.delivery : 0;
+    total = subTotal + deliveryFee;
+    let allCharges = [
+      // {
+        //   code: 'deliveryFee',
+      //   name: '邮费',
+      //   value: deliveryFeeResult != null ? deliveryFeeResult.value : null
+      // }
+    ]
+  
+    result = {
+      type: stockLocation,
+      items: items,
+      deliveryFee: deliveryFee,
+      charges: allCharges,
+      total: total,
+      subTotal: subTotal,
+      allowOrder: true
     }
-    result['defaultImage'] = newDefaultImage;
   }
+
   return result;
-}
 
-export const setConfigCache = (data) => {
-  DefaultClientAPI.client.writeQuery({
-    query: SET_CONFIG_CACHE_QUERY,
-    data: {
-      config: handleConfigOuput(data)
-    }
-  });
-}
-
-export const useConfigCache = () => {
-  const { data, error, loading } = useQuery(GET_CONFIG_CACHE_QUERY,{
-    fetchPolicy: 'cache-only'
-  });
-
-  let result = null;
-  if (loading) {
-    // console.log('loading');
-  }
-  if (error) {
-    console.log('error useConfigCache',error);
-  }
-  if (data && data.config) {
-    result = data.config;
-  }
-  return result;
-}
-
-export const useConfigQuery = (input) => {
-  const { data, error, loading } = useQuery(GET_USER_CONFIG_QUERY,{
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      configId: input ? input : configId
-    },
-    onCompleted: (result) => {
-      if (result && result.userConfig && result.userConfig.success) {
-        let configResult = result.userConfig.data;
-        setConfigCache(configResult);
-        initialCache();
-      }
-    }
-  });
-  let result = null;
-  if (loading) {
-    // console.log('loading');
-  }
-  if (error) {
-    console.log('useConfigQuery',error);
-  }
-  if (data && data.userConfig) {
-    result = handleConfigOuput(data.userConfig.data);
-  }
-  return result;
-}
-
-export const useCustomQuery = (query, options={}) => {
-  const { data, error, loading } = useQuery(query,options);
-  if (loading) return <Loading/>;
-  if (error) return "error"
-  return data;
-}
-
-export const useProductsState = (query, options={}) => {
-  const queryResult = useQuery(query,options);
-  return queryResult;
-}
-
-// custom hook starts with 'use'
-// const useCustomHook = () => {
-//   const [state, setState] = useState(null);
-//   useEffect(() => {
-//     const handleScroll = () => setScrollPosition(window.scrollY);
-//     document.addEventListener('scroll', handleScroll);
-//     return () =>
-//       document.removeEventListener('scroll', handleScroll);
-//   }, []);
-// }
-
-// export const setApolloCache = (key, query, data) => {
-//   DefaultClientAPI.client.writeQuery({
-//     query: query,
-//     data: {
-//       [key]: data
-//     }
-//   });
-// }
-
-const initialCache = () => {
-  let sessionCart = sessionStorage.getItem(configId+"-cart");
-  if (sessionCart != null) {
-    setCartCache(Object.assign({},JSON.parse(sessionCart)))
-  }
-  else {
-    setCartCache(defaultCartObj)
-  }
-
-  let sessionCustomer = sessionStorage.getItem(configId+"-customer");
-  if (sessionCustomer != null) {
-    setCustomerCache(Object.assign({},JSON.parse(sessionCustomer)))
-  }
-  else {
-    setCustomerCache(defaultCustomerObj)
-  }
-}
-
-const GET_CART_CACHE = gql`
-  query cart {
-    cart @client {
-      items
-    }
-  }
-`;
-
-const SET_CART_CACHE = gql`
-  query cart {
-    cart {
-      items
-    }
-  }
-`;
-
-const defaultCartObj = {
-  items: []
-}
-export const setCartCache = (data) => {
-  DefaultClientAPI.client.writeQuery({
-    query: SET_CART_CACHE,
-    data: {
-      cart: data
-    }
-  });
-
-  sessionStorage.setItem(configId+"-cart", JSON.stringify(data));
-}
-
-export const useCartCache = () => {
-  const { data, error, loading } = useQuery(GET_CART_CACHE,{
-    fetchPolicy: 'cache-only'
-  });
-
-  let result = null;
-  if (loading) {
-    // console.log('loading');
-  }
-  if (error) {
-    console.log('error useCartCache',error);
-  }
-  if (data && data.cart) {
-    result = data.cart;
-  }
-  return result;
 }
 
 export const plusItemQty = (items, inventoryId, qty) => {
@@ -592,73 +579,6 @@ export const removeItemFromCart = (items, itemIds = []) => {
   }
   return result;
 }
-
-
-
-
-
-const GET_CUSTOMER_CACHE = gql`
-  query customer {
-    customer @client {
-      name
-      contact
-      address
-      postcode
-      province
-    }
-  }
-`;
-
-const SET_CUSTOMER_CACHE = gql`
-  query customer {
-    customer {
-      name
-      contact
-      address
-      postcode
-      province
-    }
-  }
-`;
-
-const defaultCustomerObj = {
-  name: "",
-  contact: "",
-  address: "",
-  postcode: "",
-  province: ""
-}
-
-export const setCustomerCache = (data) => {
-  DefaultClientAPI.client.writeQuery({
-    query: SET_CUSTOMER_CACHE,
-    data: {
-      customer: data
-    }
-  });
-
-  sessionStorage.setItem(configId+"-customer", JSON.stringify(data));
-}
-
-export const useCustomerCache = () => {
-  const { data, error, loading } = useQuery(GET_CUSTOMER_CACHE,{
-    fetchPolicy: 'cache-only'
-  });
-
-  let result = null;
-  if (loading) {
-    // console.log('loading');
-  }
-  if (error) {
-    console.log('error useCartCache',error);
-  }
-  if (data && data.customer) {
-    result = data.customer;
-  }
-  return result;
-}
-
-
 
 
 

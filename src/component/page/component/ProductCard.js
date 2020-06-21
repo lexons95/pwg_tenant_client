@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tag, Tooltip } from 'antd';
-import { useConfigCache } from '../../../utils/Constants';
+import { useConfigCache } from '../../../utils/customHook';
 
 const ProductCard = (props) => {
   const { product, inventory = [], onClick } = props;

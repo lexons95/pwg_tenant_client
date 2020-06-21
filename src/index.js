@@ -7,19 +7,11 @@ import {
 import { ApolloProvider } from '@apollo/react-hooks';
 import './index.css';
 import App from './App';
-import ApolloClientAPI from './utils/ApolloClientAPI';
+import { DefaultClientAPI } from './utils/customHook';
 import * as serviceWorker from './serviceWorker';
 
-const theClientAPI = ApolloClientAPI();
-export default theClientAPI;
-const { client, cache, ...restClient } = theClientAPI;
-client.writeData({
-  data: {
-    config: null,
-    cart: null,
-    customer: null
-  }
-})
+const { client, cache, ...restClient } = DefaultClientAPI;
+
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Router>
@@ -40,4 +32,5 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+// serviceWorker.unregister();
+serviceWorker.register();

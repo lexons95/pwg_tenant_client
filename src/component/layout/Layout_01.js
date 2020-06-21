@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import { BackTop } from 'antd';
-import { useConfigCache } from '../../utils/Constants';
+import { useConfigCache } from '../../utils/customHook';
 
 const Layout_01 = (props) => {
   const layoutContentRef = useRef(null);

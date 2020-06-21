@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
-import { useConfigCache, configId, stockLocation } from '../../utils/Constants';
+import { configId, stockLocation } from '../../utils/Constants';
+import { useConfigCache } from '../../utils/customHook';
+
 import { List, Typography, Divider } from 'antd';
 import { Table, Tag, Space } from 'antd';
 

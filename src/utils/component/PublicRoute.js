@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { useUserCache, useConfigCache } from '../Constants';
+import { useConfigCache, useUserCache } from '../../utils/customHook';
 
 const PublicRoute = ({ component: Component, restricted, ...rest }) => {
   const defaultRoute = "/";

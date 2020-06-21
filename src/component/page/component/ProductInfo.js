@@ -4,7 +4,8 @@ import { LeftOutlined, RightOutlined, PlusOutlined, MinusOutlined } from '@ant-d
 import { useLazyQuery } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
 
-import { useConfigCache, setCartCache, useCartCache, getInventoryVariants, configId } from '../../../utils/Constants';
+import { getInventoryVariants, configId } from '../../../utils/Constants';
+import { useConfigCache, setCartCache, useCartCache } from '../../../utils/customHook';
 import { showMessage } from '../../../utils/component/notification';
 import LightboxModal from '../../../utils/component/LightboxModal';
 import Loading from '../../../utils/component/Loading';

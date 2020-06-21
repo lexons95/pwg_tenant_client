@@ -1,6 +1,6 @@
 import React from 'react';
 // import {  } from 'antd';
-import { useConfigCache } from '../../utils/Constants';
+import { useConfigCache } from '../../utils/customHook';
 
 const Footer_01 = (props) => {
   const configCache = useConfigCache();

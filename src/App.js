@@ -1,9 +1,10 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import gql from "graphql-tag";
+import {Helmet} from "react-helmet";
 
 import * as Components from './component/index';
-import { useConfigQuery } from './utils/Constants';
+import { useConfigQuery } from './utils/customHook';
 import Loading from './utils/component/Loading';
 import logo from './logo.svg';
 import './css/index.css';
@@ -35,15 +36,22 @@ const App = () => {
         footer={<Footer/>}
       >
         <div className="App">
-            <Switch>
-              <Route component={Components['Main']} exact={true} path={'/'}/>
-              <Route component={Components['Products']} exact={true} path={'/products'}/>
-              <Route component={Components['Products']} exact={true} path={'/category/:_id'}/>
-              
+          <Helmet>
+            {
+              configCache ? (
+                <title>{configCache.profile.name}</title>
+              ) : null
+            }
+          </Helmet>
+          <Switch>
+            <Route component={Components['Main']} exact={true} path={'/'}/>
+            <Route component={Components['Products']} exact={true} path={'/products'}/>
+            <Route component={Components['Products']} exact={true} path={'/category/:_id'}/>
+            
 
-              <Route component={Components['Orders']} exact={true} path={'/searchorder'}/>
-              <Route component={NotFound} />
-            </Switch>
+            <Route component={Components['Orders']} exact={true} path={'/searchorder'}/>
+            <Route component={NotFound} />
+          </Switch>
         </div>
       </Layout>
     );

@@ -6,9 +6,9 @@ import { useParams } from 'react-router-dom';
 
 import ProductCard from './component/ProductCard';
 import ProductInfo from './component/ProductInfo';
-import { useConfigCache, configId } from '../../utils/Constants';
+import { configId } from '../../utils/Constants';
 import Loading from '../../utils/component/Loading';
-import { useProductsQuery } from '../../utils/customHook';
+import { useConfigCache, useProductsQuery } from '../../utils/customHook';
 
 const READ_PRODUCT_INVENTORY_QUERY = gql`
   query inventory($filter: JSONObject, $configId: String) {

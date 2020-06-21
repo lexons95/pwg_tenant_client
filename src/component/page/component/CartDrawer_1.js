@@ -5,7 +5,7 @@ import { PlusOutlined, MinusOutlined, InfoCircleOutlined} from '@ant-design/icon
 import { useMutation } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
 
-import { cartCalculation, plusItemQty, minusItemQty, removeItemFromCart, defaultImage_system, configId } from '../../../utils/Constants';
+import { cartCalculation_1, plusItemQty, minusItemQty, removeItemFromCart, defaultImage_system, configId } from '../../../utils/Constants';
 import { useConfigCache, useCartCache, setCartCache } from '../../../utils/customHook';
 import { showMessage } from '../../../utils/component/notification';
 import Loading from '../../../utils/component/Loading';
@@ -15,132 +15,6 @@ import { useProductsQuery, useCustomerCache, setCustomerCache } from '../../../u
 const { Paragraph, Text } = Typography;
 const { Panel } = Collapse;
 
-const promotion = {
-  code: "",
-  name: "",
-  description: "",
-  property: 'qty',
-  filter: {
-    "product.category": "手卷草"
-  },
-  conditions: [
-    {
-      name: 'A',
-      value: 0,
-      min: 0,
-      max: 4 
-    },
-    {
-      name: 'A',
-      value: 1,
-      min: 4,
-      max: 9 
-    },
-    {
-      name: 'B',
-      value: 2,
-      min: 9,
-      max: 14
-    },
-    {
-      name: 'C',
-      value: 3,
-      min: 14,
-      max: 19 
-    },
-    {
-      name: 'D',
-      value: 4,
-      min: 19,
-      max: 24 
-    },
-    {
-      name: 'E',
-      value: 5,
-      min: 24,
-      max: 999
-    }
-  ]
-}
-
-// A 5 草 free 1 皇室 SXB 15
-// B 10 草 free 2 皇室 SXB 30
-// C 15 草 free 3 皇室 SXB 55
-// D 20 草 free 4 皇室 SXB 70
-// E 25 草 free 5 皇室 SXB 90
-
-const dutyTaxInsuranceConditions = [
-  {
-    property: 'qty',
-    filter: {
-      category: '草'
-    },
-    value: {
-      name: 'A',
-      free: 0,
-      sxb: 15
-    },
-    min: 0,
-    max: 4 
-  },
-  {
-    property: 'qty',
-    filter: {
-      category: '草'
-    },
-    value: {
-      name: 'A',
-      free: 1,
-      sxb: 15
-    },
-    min: 4,
-    max: 9 
-  },
-  {
-    property: 'qty',
-    filter: 'category.草',
-    value: {
-      name: 'B',
-      free: 2,
-      sxb: 30
-    },
-    min: 9,
-    max: 14
-  },
-  {
-    property: 'qty',
-    filter: 'category.草',
-    value: {
-      name: 'C',
-      free: 3,
-      sxb: 55
-    },
-    min: 14,
-    max: 19 
-  },
-  {
-    property: 'qty',
-    filter: 'category.草',
-    value: {
-      name: 'D',
-      free: 4,
-      sxb: 70
-    },
-    min: 19,
-    max: 24 
-  },
-  {
-    property: 'qty',
-    filter: 'category.草',
-    value: {
-      name: 'E',
-      free: 5,
-      sxb: 90
-    },
-    min: 24,
-    max: 999
-  }
-]
 const CREATE_ORDER_QUERY = gql`
   mutation createOrder($order: JSONObject!, $configId: String) {
     createOrder(order: $order, configId: $configId) {
@@ -151,7 +25,7 @@ const CREATE_ORDER_QUERY = gql`
   }
 `;
 
-const CartDrawer = (props) => {
+const CartDrawer_1 = (props) => {
   const { drawerVisible, closeDrawer } = props;
   const configCache = useConfigCache();
   const cartCache = useCartCache();
@@ -165,8 +39,6 @@ const CartDrawer = (props) => {
 
   const [ cartStockError, setCartStockError ] = useState([]);
   const [ currentCollapsePanel, setCurrentCollapsePanel ] = useState('1');
-
-  const [ acceptInsurance, setAcceptInsurance ] = useState(true);
 
   const productsResult = useProductsQuery();
 
@@ -371,64 +243,7 @@ const CartDrawer = (props) => {
     onChange: onSelectChange,
   };
 
-  const dutyTaxInsurance = (items) => {
-    
-    
-    let availableInsurance = dutyTaxInsuranceConditions[0].value.sxb;
-    let availableFreeGift = null;
-    let totalQty = 0;
-    if (productsResult && productsResult.length > 0) {
-      let cartItemsProductIds = items.map((anItem)=>anItem.product._id)
-      let foundProducts = productsResult.filter((aProduct)=>{
-        if (cartItemsProductIds.indexOf(aProduct._id) >= 0) {
-          if (aProduct.category && aProduct.category.length > 0) {
-            if (aProduct.category[0].name == '手卷草') {
-              return true;
-            }
-          }
-        }
-        return false;
-      })
-      let productIds = foundProducts.map((aProduct)=>aProduct._id);
-      let foundItems = items.filter((anItem)=>{return productIds.indexOf(anItem.product._id) >= 0});
-      
-      if (foundItems.length > 0) {
-        totalQty = foundItems.reduce((total, current)=>{
-          return total + current.qty;
-        }, 0)
-
-        dutyTaxInsuranceConditions.map((aCondition)=>{
-          if (totalQty > aCondition.min && totalQty <= aCondition.max) {
-            availableInsurance = aCondition.value.sxb;
-            availableFreeGift = aCondition.value.free;
-          }
-        });
-
-
-      }
-    }
-    let result = null;
-    result = {
-      sxb: availableInsurance,
-      free: availableFreeGift,
-      total: totalQty
-    }
-    return result;
-  }
-  // let deliveryInfo = () => {
-  //     let tooltip = (
-  //         <Tooltip title={Constants.deliveryFeeRules.dutyTaxInsuranceConditions[0].description}>
-  //             <Icon type="question-circle-o" />
-  //         </Tooltip>
-  //     )
-  //     return (
-  //         <div style={{display:"flex",alignItems:"center"}}>
-  //             邮费&nbsp;{tooltip}
-  //         </div>
-  //     )
-  // }
   
-  let foundInsurance = dutyTaxInsurance(cartItems);
   function deliveryFeeInfo() {
     Modal.info({
       title: '邮费',
@@ -460,123 +275,10 @@ const CartDrawer = (props) => {
       onOk() {},
     });
   }
-  function insuranceInfo() {
-    Modal.info({
-      title: '税险包（选择性收费）',
-      content: (
-        <div>
-          <table style={{width:'100%'}}>
-            <tbody>
-              <tr>
-                <th>套餐</th>
-                <th>购买数量 (仅限手卷草)</th>
-                <th>价格 (RMB)</th>
-              </tr>
-              <tr>
-                <td>A</td>
-                <td>满 5 包</td>
-                <td>15</td>
-              </tr>
-              <tr>
-                <td>B</td>
-                <td>满 10 包</td>
-                <td>30</td>
-              </tr>
-              <tr>
-                <td>C</td>
-                <td>满 15 包</td>
-                <td>55</td>
-              </tr>
-              <tr>
-                <td>D</td>
-                <td>满 20 包</td>
-                <td>70</td>
-              </tr>
-              <tr>
-                <td>E</td>
-                <td>满 25 包</td>
-                <td>90</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      ),
-      maskClosable: true,
-      onOk() {},
-    });
-  }
-
-  function freeGiftInfo() {
-    Modal.info({
-      title: '赠品（请在备注填写 口味名字/代号 和 数量）',
-      content: (
-        <div>
-          <table style={{width:'100%'}}>
-            <tbody>
-              <tr>
-                <th colSpan="2">
-                  本次活动赠送产品是皇室系列手卷草，每种口味限定10包，送完为止，如果下单时预留的口味没有货的话，客服会联系进行调换。
-                </th>
-              </tr>
-              <tr>
-                <th>代号</th>
-                <th>口味</th>
-              </tr>
-              <tr>
-                <td>H1</td>
-                <td>皇室贵妃樱桃</td>
-              </tr>
-              <tr>
-                <td>H2</td>
-                <td>皇室酸甜蓝莓</td>
-              </tr>
-              <tr>
-                <td>H3</td>
-                <td>皇室甜心草莓</td>
-              </tr>
-              <tr>
-                <td>H4</td>
-                <td>皇室大菠萝</td>
-              </tr>
-              <tr>
-                <td>H5</td>
-                <td>皇室至尊原味</td>
-              </tr>
-              <tr>
-                <td>H6</td>
-                <td>皇室甄选香草</td>
-              </tr>
-              <tr>
-                <td>H7</td>
-                <td>皇室霹雳薄荷</td>
-              </tr>
-              <tr>
-                <td>H8</td>
-                <td>皇室诱香苹果</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      ),
-      maskClosable: true,
-      onOk() {},
-    });
-  }
-
-  function onCheckboxChange(e) {
-    setAcceptInsurance(e.target.checked)
-  }
 
   let extraCharges = [];
-  if (foundInsurance != null && acceptInsurance) {
-    extraCharges.push({
-      code: 'dutyTaxInsurance',
-      name: '税险包',
-      value: foundInsurance.sxb
-    })
-  }
 
-  let {allowOrder, totalWeight, ...cartCalculationResult} = cartCalculation(cartItems, deliveryFee, extraCharges);
+  let {allowOrder, ...cartCalculationResult} = cartCalculation_1(cartItems, deliveryFee, extraCharges);
 
   const cartTableFooter = () => {
     const handleDeleteItems = () => {
@@ -600,7 +302,6 @@ const CartDrawer = (props) => {
         )
     }
 
-    console.log('itemsss', cartItems)
     return (
         <React.Fragment>
             <div style={{display:"flex",flexWrap:"wrap",justifyContent:"space-between"}}>
@@ -617,14 +318,8 @@ const CartDrawer = (props) => {
                         return (<Descriptions.Item key={index} label={(<span>{aCharge.name} <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{aCharge.value}</Descriptions.Item>)
                       })
                     } */}
-                    <Descriptions.Item label={(<span style={!allowOrder?{color:'red'}:{}}>邮费 ({(totalWeight/1000)}kg) <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{cartCalculationResult.deliveryFee}</Descriptions.Item>
-                    <Descriptions.Item label={(<span>税险包 <InfoCircleOutlined onClick={insuranceInfo} /></span>)}>
-                      {
-                        foundInsurance != null ? (
-                          <Checkbox checked={acceptInsurance} onChange={onCheckboxChange}>{foundInsurance.sxb}</Checkbox>
-                        ) : '-'
-                      }
-                    </Descriptions.Item>
+                    {/* <Descriptions.Item label={(<span>邮费 <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{cartCalculationResult.deliveryFee}</Descriptions.Item> */}
+                    <Descriptions.Item label={'邮费'}>{cartCalculationResult.deliveryFee}</Descriptions.Item>
                     <Descriptions.Item label={`总计 (${configCache.currencyUnit})`}>{cartCalculationResult.total}</Descriptions.Item>
                 </Descriptions>
             </div>
@@ -733,13 +428,8 @@ const CartDrawer = (props) => {
                     <Input/>
                   </Form.Item>
                 </Space>
-                <Form.Item name={'remark'} label={
-                  foundInsurance.free && foundInsurance.free > 0 ? (
-                    <span>备注 【符合活动条件 (可获得赠品数量: {foundInsurance.free}包): <Button type='link' onClick={freeGiftInfo}>点击查看赠品选项</Button>】</span>
-                  ) : "备注"    
-                } rules={foundInsurance.free && foundInsurance.free > 0 ? [{ required: true, message:"请输入赠品口味及数量" }] : []}>
+                <Form.Item name={'remark'} label={'备注'}>
                   <Input.TextArea
-                    placeholder={'可填写赠品口味'}
                     defaultValue={""}
                     rows={4}
                   />
@@ -767,4 +457,4 @@ const CartDrawer = (props) => {
   )
 }
 
-export default CartDrawer;
+export default CartDrawer_1;
