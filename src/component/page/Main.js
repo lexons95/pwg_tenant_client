@@ -84,54 +84,69 @@ const columns = [
   },
 ];
 
-  return (
-    <div style ={{padding: '35px'}}>
-      <div>
-          <h1>年中回馈-海淘来袭</h1>
-          <h2>皇室尊享主题季</h2>
-          <div>马男放水，补贴领到手软。为了回馈广大老客户，解决缺货问题，我们扬起了海淘的大帆，马男为了让大家都能顺利上船，对邮费和税费进行了大力补贴。</div>
-          <div>活动时间2020年6月15日-2020年6月30日</div>
+  if (configId == 'mananml') {
+    return (
+      <div style ={{padding: '35px'}}>
+        <div>
+            <h1>年中回馈-海淘来袭</h1>
+            <h2>皇室尊享主题季</h2>
+            <div>马男放水，补贴领到手软。为了回馈广大老客户，解决缺货问题，我们扬起了海淘的大帆，马男为了让大家都能顺利上船，对邮费和税费进行了大力补贴。</div>
+            <div>活动时间2020年6月15日-2020年6月30日</div>
 
+
+        </div>
+
+        <div style = {{textAlign: 'left', marginTop: '40px'}}>
+
+            <Divider orientation="left">具体活动如下</Divider>
+            <List
+              size="small"
+              header={<div style = {{fontWeight: 'bold'}}>可选套餐</div>}
+              footer={<div style = {{textAlign: 'center'}}>Share & Enjoy</div>}
+              bordered
+
+              dataSource={data}
+              renderItem={item => <List.Item>{item}</List.Item>}
+            />
+
+
+            <Divider orientation="left" style = {{marginTop: '40px'}}>海淘小贴士</Divider>
+            <List
+              size="small"
+              header={<div style = {{fontWeight: '120px', textAlign:'left'}}>一. 关于运输和邮费</div>}
+              dataSource={des1}
+              renderItem={item => <List.Item>{item}</List.Item>}
+            />
+            <List
+              size="small"
+              header={<div style = {{fontWeight: 'bold'}}>二. 关于税险包</div>}
+              dataSource={des2}
+              renderItem={item => <List.Item>{item}</List.Item>}
+            />
+
+          </div>
+
+          <div style = {{marginTop: '40px'}}>
+            <Divider orientation="left" >海关税费</Divider>
+            <Table dataSource={dataSource} columns={columns} pagination = {false}/>
+          </div>
 
       </div>
-
-      <div style = {{textAlign: 'left', marginTop: '40px'}}>
-
-          <Divider orientation="left">具体活动如下</Divider>
-          <List
-            size="small"
-            header={<div style = {{fontWeight: 'bold'}}>可选套餐</div>}
-            footer={<div style = {{textAlign: 'center'}}>Share & Enjoy</div>}
-            bordered
-
-            dataSource={data}
-            renderItem={item => <List.Item>{item}</List.Item>}
-          />
-
-
-          <Divider orientation="left" style = {{marginTop: '40px'}}>海淘小贴士</Divider>
-          <List
-            size="small"
-            header={<div style = {{fontWeight: '120px', textAlign:'left'}}>一. 关于运输和邮费</div>}
-            dataSource={des1}
-            renderItem={item => <List.Item>{item}</List.Item>}
-          />
-          <List
-            size="small"
-            header={<div style = {{fontWeight: 'bold'}}>二. 关于税险包</div>}
-            dataSource={des2}
-            renderItem={item => <List.Item>{item}</List.Item>}
-          />
-
-        </div>
-
-        <div style = {{marginTop: '40px'}}>
-          <Divider orientation="left" >海关税费</Divider>
-          <Table dataSource={dataSource} columns={columns} pagination = {false}/>
-        </div>
-
-    </div>
-  );
+    );
+  }
+  else {
+    let logoLink = null;
+    if (configCache && configCache.profile.logo) {
+      logoLink = configCache.imageSrc+configCache.profile.logo;
+    }
+    return (
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        {
+          logoLink != null ? <img src={logoLink} style={{maxHeight: '80vh'}} /> : (configCache && configCache.profile ? configCache.profile.name : "")
+        }
+      </div>
+    )
+  }
 }
 
 export default Main
