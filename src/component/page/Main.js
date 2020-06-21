@@ -5,6 +5,8 @@ import { useConfigCache } from '../../utils/customHook';
 import { List, Typography, Divider } from 'antd';
 import { Table, Tag, Space } from 'antd';
 
+const { Paragraph } = Typography;
+
 const Main = (props) => {
   const configCache = useConfigCache();
   const data = [
@@ -140,10 +142,16 @@ const columns = [
       logoLink = configCache.imageSrc+configCache.profile.logo;
     }
     return (
-      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
         {
-          logoLink != null ? <img src={logoLink} style={{maxHeight: '80vh'}} /> : (configCache && configCache.profile ? configCache.profile.name : "")
+          logoLink != null ? <img src={logoLink} style={{maxHeight: '80vh'}} /> : null
         }
+        <Paragraph>
+            设备不分高低贵贱，适合自己的就是最好的<br/>
+            油一定要选择正规的，因为身体是自己的<br/>
+            买什么产品不重要，重要的是卖你产品的人要懂这个产品<br/>
+            待人为善，处处随缘。<br/>
+        </Paragraph>
       </div>
     )
   }
