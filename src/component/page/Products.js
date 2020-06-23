@@ -110,7 +110,7 @@ const Products = (props) => {
   let getProductsResult = getProducts(productsResult);
   return (
     <div>
-      <div style={{textAlign:'left', margin: '16px 0 0 16px'}}>Found {getProductsResult.length} items</div>
+      <div style={{textAlign:'left', margin: '16px 0 0 16px'}}>Showing {getProductsResult.length} items</div>
       {
         productsResult.length > 0 && getProductsResult.length > 0 ?
           <ul className="products-container">

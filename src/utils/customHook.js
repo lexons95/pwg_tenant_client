@@ -26,7 +26,7 @@ const GET_USER_CONFIG_QUERY = gql`
 
 const GET_CONFIG_CACHE_QUERY = gql`
   query config {
-    config @client {
+    config {
       _id
       configId
       defaultImage_system

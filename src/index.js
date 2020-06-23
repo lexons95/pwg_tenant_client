@@ -10,7 +10,7 @@ import App from './App';
 import { DefaultClientAPI } from './utils/customHook';
 import * as serviceWorker from './serviceWorker';
 
-const { client, cache, ...restClient } = DefaultClientAPI;
+const { client } = DefaultClientAPI;
 
 ReactDOM.render(
   <ApolloProvider client={client}>

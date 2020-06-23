@@ -9,11 +9,12 @@ export const defaultImage_system = require("./noImageFound.png");
 export const stockLocation = "0";
 export const configId = "klklvapor";
 
-export const getAllProductCategory = (products) => {
+export const getAllProductCategory = (products = []) => {
   let result = [];
-  products.map((aProduct)=>{
+  console.log('products',products)
+  products.forEach((aProduct)=>{
     if (aProduct.category && aProduct.category.length > 0) {
-      aProduct.category.map((aCategory)=>{
+      aProduct.category.forEach((aCategory)=>{
         let foundPushedItem = result.find((anItem)=>anItem._id == aCategory._id);
         if (!foundPushedItem) {
           result.push(aCategory);
@@ -29,7 +30,7 @@ export const getInventoryVariants = (productVariants, inventoryVariants) => {
   let label = ""
   let variantKeys = Object.keys(productVariants);
   if (productVariants) {
-    variantKeys.map((aKey, index)=>{
+    variantKeys.forEach((aKey, index)=>{
       let value = ""
       if (inventoryVariants[aKey]) {
         value = inventoryVariants[aKey];
@@ -49,7 +50,7 @@ export const getInventoryVariants = (productVariants, inventoryVariants) => {
 
 const getTotalFromItems = (items, property, initial = 0) => {
   let total = initial;
-  items.map((anItem)=>{
+  items.forEach((anItem)=>{
     if (property == 'weight') {
       total += (anItem[property] * anItem['qty']);
     }
@@ -112,7 +113,7 @@ const calculations = (items = [], conditions = []) => {
   if (items.length > 0) {
 
     if (conditions.length > 0) {
-      conditions.map((aCondition, index)=>{
+      conditions.forEach((aCondition, index)=>{
         if (aCondition.code) {
           switch(aCondition.code) {
             case 'deliveryFee': 
@@ -149,7 +150,7 @@ const cartCalculation2 = (items = [], extraCharges = []) => {
   let total = 0;
 
   if (items.length > 0) {
-    items.map((anItem)=>{
+    items.forEach((anItem)=>{
       subTotal += (anItem.price * anItem.qty)
     })
   
@@ -218,7 +219,7 @@ const cartCalculation2 = (items = [], extraCharges = []) => {
       let foundMethod = deliveryFeeMethods.find((aMethod)=>{return aMethod.type == deliveryFeeType})
       if (foundMethod) {
         // conditions's order affect the result, should arrange from lower range to higher range (deliveryFeeMethods[1].conditions)
-        foundMethod.conditions && foundMethod.conditions.map((aCondition)=>{
+        foundMethod.conditions && foundMethod.conditions.forEach((aCondition)=>{
           let checkResult = conditionRangeChecker(items, aCondition, initialWeight);
           if (checkResult != null && checkResult.success) {
             deliveryFeeResult = checkResult;
@@ -240,7 +241,7 @@ const cartCalculation2 = (items = [], extraCharges = []) => {
       ]
   
       total = subTotal;
-      allCharges.map((aCharge)=>{
+      allCharges.forEach((aCharge)=>{
         if (aCharge.value != null) {
           total += aCharge.value;
         }
@@ -279,7 +280,7 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
 
   if (items.length > 0) {
 
-    items.map((anItem)=>{
+    items.forEach((anItem)=>{
       subTotal += (anItem.price * anItem.qty)
     })
   
@@ -375,7 +376,7 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
       let foundMethod = deliveryFeeMethods.find((aMethod)=>{return aMethod.type == deliveryFeeType})
       if (foundMethod) {
         // conditions's order affect the result, should arrange from lower range to higher range (deliveryFeeMethods[1].conditions)
-        foundMethod.conditions && foundMethod.conditions.map((aCondition)=>{
+        foundMethod.conditions && foundMethod.conditions.forEach((aCondition)=>{
           let checkResult = conditionRangeChecker(items, aCondition, initialWeight);
           if (checkResult != null && checkResult.success) {
             deliveryFeeResult = checkResult;
@@ -397,7 +398,7 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
       ]
   
       total = subTotal;
-      allCharges.map((aCharge)=>{
+      allCharges.forEach((aCharge)=>{
         if (aCharge.value != null) {
           total += aCharge.value;
         }
@@ -436,19 +437,22 @@ export const cartCalculation_1 = (items = [], deliveryFee = 0, extraCharges = []
 
   if (items.length > 0) {
 
-    items.map((anItem)=>{
+    items.forEach((anItem)=>{
       subTotal += (anItem.price * anItem.qty)
     })
   
     let configCache = getConfigCache();
     let deliveryFee = configCache && configCache.config && configCache.config.delivery ? configCache.config.delivery : 0;
+    if (subTotal >= 100) {
+      deliveryFee = 0
+    }
     total = subTotal + deliveryFee;
     let allCharges = [
-      // {
-        //   code: 'deliveryFee',
-      //   name: '邮费',
-      //   value: deliveryFeeResult != null ? deliveryFeeResult.value : null
-      // }
+      {
+        code: 'deliveryFee',
+        name: '邮费',
+        value: deliveryFee
+      }
     ]
   
     result = {
@@ -474,7 +478,7 @@ export const plusItemQty = (items, inventoryId, qty) => {
   }
   if (items && items.length > 0) {
     let newCartItems = []
-    items.map((anItem)=>{
+    items.forEach((anItem)=>{
       if (anItem.inventoryId == inventoryId) {
         let newQty = anItem['qty'] + qty;
         if (newQty > anItem.stock) {
@@ -521,7 +525,7 @@ export const minusItemQty = (items, inventoryId, qty) => {
   }
   if (items && items.length > 0) {
     let newCartItems = []
-    items.map((anItem)=>{
+    items.forEach((anItem)=>{
       if (anItem.inventoryId == inventoryId) {
         let newQty = anItem['qty'] - qty;
         if (newQty > 0) {
@@ -564,7 +568,7 @@ export const removeItemFromCart = (items, itemIds = []) => {
     data: {}
   }
   let newCartItems = [];
-  items.map((anItem)=>{
+  items.forEach((anItem)=>{
     if (itemIds.indexOf(anItem.inventoryId) < 0) {
       newCartItems.push(anItem)
     }

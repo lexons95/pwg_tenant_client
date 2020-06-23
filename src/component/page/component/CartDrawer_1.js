@@ -252,20 +252,10 @@ const CartDrawer_1 = (props) => {
           <table style={{width:'100%'}}>
             <tbody>
               <tr>
-                <th>最高重量</th>
-                <th>2kg</th>
+                <td>一律 {configCache.currencyUnit + configCache.delivery}</td>
               </tr>
               <tr>
-                <th>重量 (kg)</th>
-                <th>价格 (RMB)</th>
-              </tr>
-              <tr>
-                <td>小于/等于 1</td>
-                <td>80</td>
-              </tr>
-              <tr>
-                <td>大于 1</td>
-                <td>96</td>
+                <td>买满 {configCache.currencyUnit}100 免邮费</td>
               </tr>
             </tbody>
           </table>
@@ -319,7 +309,7 @@ const CartDrawer_1 = (props) => {
                       })
                     } */}
                     {/* <Descriptions.Item label={(<span>邮费 <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{cartCalculationResult.deliveryFee}</Descriptions.Item> */}
-                    <Descriptions.Item label={'邮费'}>{cartCalculationResult.deliveryFee}</Descriptions.Item>
+                    <Descriptions.Item label={(<span>邮费 <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{cartCalculationResult.deliveryFee}</Descriptions.Item>
                     <Descriptions.Item label={`总计 (${configCache.currencyUnit})`}>{cartCalculationResult.total}</Descriptions.Item>
                 </Descriptions>
             </div>
