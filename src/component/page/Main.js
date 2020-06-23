@@ -90,12 +90,10 @@ const columns = [
     return (
       <div style ={{padding: '35px'}}>
         <div>
-            <h1>年中回馈-海淘来袭</h1>
-            <h2>皇室尊享主题季</h2>
-            <div>马男放水，补贴领到手软。为了回馈广大老客户，解决缺货问题，我们扬起了海淘的大帆，马男为了让大家都能顺利上船，对邮费和税费进行了大力补贴。</div>
-            <div>活动时间2020年6月15日-2020年6月30日</div>
-
-
+          <h1>年中回馈-海淘来袭</h1>
+          <h2>皇室尊享主题季</h2>
+          <div>马男放水，补贴领到手软。为了回馈广大老客户，解决缺货问题，我们扬起了海淘的大帆，马男为了让大家都能顺利上船，对邮费和税费进行了大力补贴。</div>
+          <div>活动时间2020年6月15日-2020年6月30日</div>
         </div>
 
         <div style = {{textAlign: 'left', marginTop: '40px'}}>
@@ -143,15 +141,15 @@ const columns = [
     }
     return (
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-        {
-          logoLink != null ? <img src={logoLink} style={{maxHeight: '80vh'}} /> : null
-        }
         <Paragraph>
             设备不分高低贵贱，适合自己的就是最好的<br/>
             油一定要选择正规的，因为身体是自己的<br/>
             买什么产品不重要，重要的是卖你产品的人要懂这个产品<br/>
             待人为善，处处随缘。<br/>
         </Paragraph>
+        {
+          logoLink != null ? <img src={logoLink} style={{maxHeight: '80vh'}} /> : null
+        }
       </div>
     )
   }

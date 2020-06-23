@@ -91,9 +91,15 @@ const Header_01 = (props) => {
   let logoLink = "";
   if (configCache) {
     title = configCache.profile.name;
-    if (configCache.profile.logo) {
-      logoLink = configCache.imageSrc+configCache.profile.logo;
-      title = (<><Avatar src={`${configCache.imageSrc+configCache.profile.logo}`}/> {title}</>)
+    if (configCache.profile.avatar) {
+      logoLink = configCache.imageSrc+configCache.profile.avatar;
+      title = (<><Avatar src={logoLink}/> {title}</>)
+    }
+    else {
+      if (configCache.profile.logo) {
+        logoLink = configCache.imageSrc+configCache.profile.logo;
+        title = (<><Avatar src={logoLink}/> {title}</>)
+      }
     }
   }
 
