@@ -11,7 +11,6 @@ export const configId = "klklvapor";
 
 export const getAllProductCategory = (products = []) => {
   let result = [];
-  console.log('products',products)
   products.forEach((aProduct)=>{
     if (aProduct.category && aProduct.category.length > 0) {
       aProduct.category.forEach((aCategory)=>{
