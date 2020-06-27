@@ -4,10 +4,10 @@ import { setCartCache, getConfigCache } from './customHook';
 export const defaultImage_system = require("./noImageFound.png");
 
 // 0: local (国内), 1: oversea (国外)
-// export const stockLocation = "1";
-// export const configId = "mananml";
-export const stockLocation = "0";
-export const configId = "klklvapor";
+export const stockLocation = "1";
+export const configId = "mananml";
+// export const stockLocation = "0";
+// export const configId = "klklvapor";
 
 export const getAllProductCategory = (products = []) => {
   let result = [];
