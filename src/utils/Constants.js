@@ -99,6 +99,80 @@ const conditionRangeChecker = (items = [], condition = null, initial = 0) => {
   return checkedConditionResult;
 }
 
+/*
+Editor UI
+PS: calculate charges first then promotion
+PS: all weight in g
+
+limitation //min amount of certain property to allow ordering
+weight/qty/price
+
+
+charges
+eg. 税险包 (custom) (optional: means for customer to choose y/n)
+eg. delivery fee (fixed/range) (optional: means seller can turn on/off)
+{
+  code: 'deliveryFee/shippingFee',
+  name: "邮费",
+  description: "",
+  type: 'fixed/range',
+  optional: false, //customer can choose to apply/not
+  property: 'weight/price/qty', //value to be compared in cart items
+  filter: [ //filter cart items that meet the requirement
+    {
+      property: "product._id",
+      value: "",
+      operator: "and/or"
+    },
+    {
+      property: "product.type",
+      value: "",
+      operator: "and/or"
+    },
+    {
+      property: "product.category",
+      value: "",
+      operator: "and/or"
+    },
+    {
+      property: "product.tags",
+      value: "",
+      operator: "and/or"
+    }
+  ]
+  conditions: [
+    {
+      min: 0,
+      max: 100,
+      value: 12
+    }
+  ]
+}
+
+promotions
+eg. purchase min/max/range amount of subtotal/weight/quantity (filterable by certain product's id/category/tags/maybe type)
+> discount by percentage of subtotal/ fixed amount/ certain charges free
+{
+  code: 'freeGift',
+  name: "赠品",
+  description: "",
+  type: 'fixed/range',
+  optional: false, //customer can choose to apply/not
+  property: 'qty',
+  filter: { //filter cart items that meet the requirement
+    property: "product.category",
+    value: "手卷草",
+    operator: "and"
+  },
+  conditions: [
+    {
+      min: 0,
+      max: 100,
+      value: 12
+    }
+  ]
+}
+*/
 const calculations = (items = [], conditions = []) => {
   let result = {
     //type: stockLocation,
@@ -431,6 +505,7 @@ export const cartCalculation_1 = (items = [], deliveryFee = 0, extraCharges = []
     allowOrder: false,
     totalWeight: 0
   }
+  let minPurchase = 125
   let subTotal = 0;
   let total = 0;
 
@@ -442,7 +517,7 @@ export const cartCalculation_1 = (items = [], deliveryFee = 0, extraCharges = []
   
     let configCache = getConfigCache();
     let deliveryFee = configCache && configCache.config && configCache.config.delivery ? configCache.config.delivery : 0;
-    if (subTotal >= 100) {
+    if (subTotal >= minPurchase) {
       deliveryFee = 0
     }
     total = subTotal + deliveryFee;

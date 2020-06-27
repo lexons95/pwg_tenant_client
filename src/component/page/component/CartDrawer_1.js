@@ -255,7 +255,7 @@ const CartDrawer_1 = (props) => {
                 <td>一律 {configCache.currencyUnit + configCache.delivery}</td>
               </tr>
               <tr>
-                <td>买满 {configCache.currencyUnit}100 免邮费</td>
+                <td>买满 {configCache.currencyUnit}125 免邮费</td>
               </tr>
             </tbody>
           </table>

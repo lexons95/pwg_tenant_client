@@ -148,7 +148,7 @@ const columns = [
             待人为善，处处随缘。<br/>
         </Paragraph>
         {
-          logoLink != null ? <img src={logoLink} style={{maxHeight: '80vh'}} /> : null
+          logoLink != null ? <img src={logoLink} style={{maxHeight: '80vh', maxWidth: '100%'}} /> : null
         }
       </div>
     )
