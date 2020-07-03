@@ -12,8 +12,8 @@ const { Search } = Input;
 const crypto = require('crypto');
 
 const GET_ORDERS_QUERY = gql`
-  query orders($filter: JSONObject, $configId: String) {
-    orders(filter: $filter, configId: $configId) {
+  query searchOrders($filter: String!, $configId: String) {
+    searchOrders(filter: $filter, configId: $configId) {
       _id
       createdAt
       updatedAt
@@ -41,11 +41,11 @@ const Orders = (props) => {
   const [ searchOrders, { loading: loadingSearchOrders} ] = useLazyQuery(GET_ORDERS_QUERY, {
     fetchPolicy: "cache-and-network",
     onError: (error) => {
-      console.log("products error", error)
+      console.log("order error", error)
 
     },
     onCompleted: (result) => {
-      setFoundOrders(result && result.orders ? result.orders : [])
+      setFoundOrders(result && result.searchOrders ? result.searchOrders : [])
     }
   });
 
@@ -141,11 +141,7 @@ const Orders = (props) => {
   const onFormSubmit = (values) => {
     searchOrders({
       variables:{
-        filter: {
-          filter: {
-            'customer.contact': values.contact
-          }
-        },
+        filter: values.contact,
         configId: configId
       }
     })
@@ -221,7 +217,7 @@ const Orders = (props) => {
           marginBottom: '8px'
         }}
       >
-        <Form.Item name={'contact'} rules={[{ required: true, message:"请输入电话号码" }]}>
+        <Form.Item name={'contact'} rules={[{ required: false, message:"请输入电话号码" }]}>
           <Search
             placeholder="电话号码"
             enterButton
