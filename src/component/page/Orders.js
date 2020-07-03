@@ -217,7 +217,7 @@ const Orders = (props) => {
           marginBottom: '8px'
         }}
       >
-        <Form.Item name={'contact'} rules={[{ required: false, message:"请输入电话号码" }]}>
+        <Form.Item name={'contact'} rules={[{ required: true, message:"请输入电话号码" }]}>
           <Search
             placeholder="电话号码"
             enterButton
