@@ -6,11 +6,10 @@ import { useMutation } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
 
 import { cartCalculation_1, plusItemQty, minusItemQty, removeItemFromCart, defaultImage_system, configId } from '../../../utils/Constants';
-import { useConfigCache, useCartCache, setCartCache } from '../../../utils/customHook';
+import { useConfigCache, useCartCache, setCartCache, useProductsQuery, useCustomerCache, setCustomerCache } from '../../../utils/customHook';
 import { showMessage } from '../../../utils/component/notification';
 import Loading from '../../../utils/component/Loading';
 import OrderInfo from './OrderInfo';
-import { useProductsQuery, useCustomerCache, setCustomerCache } from '../../../utils/customHook';
 
 const { Paragraph, Text } = Typography;
 const { Panel } = Collapse;

@@ -60,6 +60,39 @@ const getTotalFromItems = (items, property, initial = 0) => {
   return total;
 }
 
+export const isBetween = (min = null, max = null, value = null, type = 'includeMin') => {
+  // include min -> value >= min && value < max
+  // include max -> value > min && value <= max
+
+  let result = false;
+  if (value && !(min == null && max == null)) {
+    let passedMin = min == null ? true : false;
+    let passedMax = max == null ? true : false;
+
+    if (!passedMin) {
+      if (type == 'includeMin') {
+        passedMin = value >= min;
+      }
+      else if (type == 'includeMax') {
+        passedMin = value > min;
+      }
+    }
+
+    if (!passedMax) {
+      if (type == 'includeMin') {
+        passedMax = value < max;
+
+      }
+      else if (type == 'includeMax') {
+        passedMax = value <= max;
+      }
+    }
+
+    result = passedMin && passedMax;
+  }
+  return result;
+}
+
 const conditionRangeChecker = (items = [], condition = null, initial = 0) => {
   let checkedConditionResult = null;
 
@@ -381,7 +414,7 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
           type: 'range',
           property: 'weight',
           min: 0,
-          max: 2000
+          max: 3000
         }
       ]
   
@@ -389,12 +422,12 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
         {
           code: 'deliveryFee',
           type: 'static',
-          value: 123
+          defaultValue: 123
         },
         {
           code: 'deliveryFee',
           type: 'dynamic',
-          value: 80,
+          defaultValue: 80,
           conditions: [
             {
               type: 'range',
@@ -409,6 +442,13 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
               min: 1000,
               max: 2000,
               value: 96
+            },
+            {
+              type: 'range',
+              property: 'weight',
+              min: 2000,
+              max: 3000,
+              value: 116
             }
           ]
         }
