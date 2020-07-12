@@ -29,7 +29,7 @@ const giftPromotion = {
       name: 'A',
       value: 1,
       min: 4,
-      max: 9 
+      max: 9
     },
     {
       name: 'B',
@@ -41,13 +41,13 @@ const giftPromotion = {
       name: 'C',
       value: 3,
       min: 14,
-      max: 19 
+      max: 19
     },
     {
       name: 'D',
       value: 4,
       min: 19,
-      max: 24 
+      max: 24
     },
     {
       name: 'E',
@@ -209,7 +209,7 @@ const CartDrawer = (props) => {
               errorItem = foundItem;
             }
           }
-          
+
           return (
               <React.Fragment>
                 <Avatar src={imageLink} size="large" shape="square"/>
@@ -289,7 +289,7 @@ const CartDrawer = (props) => {
   };
 
   const dutyTaxInsurance = (items) => {
-        
+
     let availableInsurance = dutyTaxInsuranceConditions.defaultValue;
     let availableFreeGift = giftPromotion.defaultValue;
     let totalQty = 0;
@@ -307,7 +307,7 @@ const CartDrawer = (props) => {
       })
       let productIds = foundProducts.map((aProduct)=>aProduct._id);
       let foundItems = items.filter((anItem)=>{return productIds.indexOf(anItem.product._id) >= 0});
-      
+
       if (foundItems.length > 0) {
         totalQty = foundItems.reduce((total, current)=>{
           return total + current.qty;
@@ -335,7 +335,7 @@ const CartDrawer = (props) => {
     }
     return result;
   }
-  
+
   let foundInsurance = dutyTaxInsurance(cartItems);
   function deliveryFeeInfo() {
     Modal.info({
@@ -386,8 +386,8 @@ const CartDrawer = (props) => {
               </tr>
               {
                 dutyTaxInsuranceConditions.conditions.map((aCondition,index)=>{
-                  let msg = dutyTaxInsuranceConditions.operatorType == 'includeMax' ? 
-                    `${aCondition.min == null ? '或以下' : aCondition.min + 1} ~ ${aCondition.max == null ? '或以上' : aCondition.max} 包` 
+                  let msg = dutyTaxInsuranceConditions.operatorType == 'includeMax' ?
+                    `${aCondition.min == null ? '或以下' : aCondition.min + 1} ~ ${aCondition.max == null ? '或以上' : aCondition.max} 包`
                     : `${aCondition.min == null ? '或以下' : aCondition.min} ~ ${aCondition.max == null ? '或以上' : aCondition.max - 1} 包`
                   return (
                     <tr key={index}>
@@ -420,40 +420,25 @@ const CartDrawer = (props) => {
                 </th>
               </tr>
               <tr>
-                <th>代号</th>
                 <th>口味</th>
               </tr>
               <tr>
-                <td>H1</td>
-                <td>皇室贵妃樱桃</td>
+                <td>斯坦尼斯巴尔干拉塔尼亚</td>
               </tr>
               <tr>
-                <td>H2</td>
-                <td>皇室酸甜蓝莓</td>
+                <td>斯坦尼斯醇正维吉尼亚</td>
               </tr>
               <tr>
-                <td>H3</td>
-                <td>皇室甜心草莓</td>
+                <td>斯坦尼斯顺滑香草</td>
               </tr>
               <tr>
-                <td>H4</td>
-                <td>皇室大菠萝</td>
+                <td>斯坦尼斯野山樱桃</td>
               </tr>
               <tr>
-                <td>H5</td>
-                <td>皇室至尊原味</td>
+                <td>斯坦尼斯菁纯黑树莓</td>
               </tr>
               <tr>
-                <td>H6</td>
-                <td>皇室甄选香草</td>
-              </tr>
-              <tr>
-                <td>H7</td>
-                <td>皇室霹雳薄荷</td>
-              </tr>
-              <tr>
-                <td>H8</td>
-                <td>皇室诱香苹果</td>
+                <td>斯坦尼斯伦敦经典</td>
               </tr>
             </tbody>
           </table>
@@ -506,7 +491,7 @@ const CartDrawer = (props) => {
         <React.Fragment>
             <div style={{display:"flex",flexWrap:"wrap",justifyContent:"space-between"}}>
                 {deleteButton}
-                <Descriptions 
+                <Descriptions
                     bordered={true}
                     size="small"
                     column={{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
@@ -534,7 +519,7 @@ const CartDrawer = (props) => {
   }
 
   let submitDisabled = cartItems.length > 0 && !loadingCreateOrder && allowOrder ? false : true;
-  
+
   const onSubmit = (values) => {
     console.log('onSubmit', values)
     const { remark, ...restValues } = values;
@@ -551,7 +536,7 @@ const CartDrawer = (props) => {
       deliveryFee: cartCalculationResult.deliveryFee,
       customer: restValues,
       remark: remark
-    }    
+    }
     if (!submitDisabled) {
       createOrder({
         variables: {
@@ -566,7 +551,7 @@ const CartDrawer = (props) => {
 
   //let formInitialValues = customerCache ? customerCache : {}
 
-  
+
   return (
     <Drawer
       title="购物车"
@@ -580,38 +565,38 @@ const CartDrawer = (props) => {
     >
       {
         cartCache ? (
-          <Collapse 
-            bordered={false} 
-            //defaultActiveKey={['1','2']} 
-            expandIconPosition="right" 
+          <Collapse
+            bordered={false}
+            //defaultActiveKey={['1','2']}
+            expandIconPosition="right"
             activeKey={currentCollapsePanel}
             accordion
             onChange={(value)=>{
               setCurrentCollapsePanel(value)
             }}
           >
-            <Panel 
-              //header={(<Button type="link">产品列表</Button>)} 
-              header={"产品列表"} 
+            <Panel
+              //header={(<Button type="link">产品列表</Button>)}
+              header={"产品列表"}
               key="1"
             >
               <Table
                 rowKey="inventoryId"
-                columns={cartTableCol} 
-                dataSource={cartItems} 
+                columns={cartTableCol}
+                dataSource={cartItems}
                 pagination={false}
                 size="small"
                 rowSelection={rowSelection}
                 footer={() => cartTableFooter()}
               />
             </Panel>
-            <Panel 
-              //header={(<Button type="link" disabled={submitDisabled}>下一步</Button>)} 
-              header={"下一步"} 
-              key="2" 
+            <Panel
+              //header={(<Button type="link" disabled={submitDisabled}>下一步</Button>)}
+              header={"下一步"}
+              key="2"
               disabled={submitDisabled}
             >
-              <Form 
+              <Form
                 form={form}
                 layout={'vertical'}
                 onFinish={onSubmit}
@@ -637,7 +622,7 @@ const CartDrawer = (props) => {
                 <Form.Item name={'remark'} label={
                   foundInsurance.free && foundInsurance.free > 0 ? (
                     <span>备注 【符合活动条件 (可获得赠品数量: {foundInsurance.free}包): <Button type='link' onClick={freeGiftInfo}>点击查看赠品选项</Button>】</span>
-                  ) : "备注"    
+                  ) : "备注"
                 } rules={foundInsurance.free && foundInsurance.free > 0 ? [{ required: true, message:"请输入赠品口味及数量" }] : []}>
                   <Input.TextArea
                     placeholder={'可填写赠品口味'}
@@ -652,7 +637,7 @@ const CartDrawer = (props) => {
               </Form>
             </Panel>
           </Collapse>
-          
+
         ) : null
       }
 
