@@ -5,31 +5,26 @@ import { PlusOutlined, MinusOutlined, InfoCircleOutlined} from '@ant-design/icon
 import { useMutation } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
 
-import { cartCalculation, plusItemQty, minusItemQty, removeItemFromCart, defaultImage_system, configId } from '../../../utils/Constants';
-import { useConfigCache, useCartCache, setCartCache } from '../../../utils/customHook';
+import { isBetween, cartCalculation, plusItemQty, minusItemQty, removeItemFromCart, defaultImage_system, configId } from '../../../utils/Constants';
+import { useConfigCache, useCartCache, setCartCache, useProductsQuery, useCustomerCache, setCustomerCache } from '../../../utils/customHook';
 import { showMessage } from '../../../utils/component/notification';
 import Loading from '../../../utils/component/Loading';
 import OrderInfo from './OrderInfo';
-import { useProductsQuery, useCustomerCache, setCustomerCache } from '../../../utils/customHook';
 
 const { Paragraph, Text } = Typography;
 const { Panel } = Collapse;
 
-const promotion = {
+const giftPromotion = {
   code: "",
   name: "",
   description: "",
+  defaultValue: 0,
   property: 'qty',
   filter: {
     "product.category": "手卷草"
   },
+  operatorType: 'includeMax',
   conditions: [
-    {
-      name: 'A',
-      value: 0,
-      min: 0,
-      max: 4 
-    },
     {
       name: 'A',
       value: 1,
@@ -63,84 +58,52 @@ const promotion = {
   ]
 }
 
-// A 5 草 free 1 皇室 SXB 15
-// B 10 草 free 2 皇室 SXB 30
-// C 15 草 free 3 皇室 SXB 55
-// D 20 草 free 4 皇室 SXB 70
-// E 25 草 free 5 皇室 SXB 90
 
-const dutyTaxInsuranceConditions = [
-  {
-    property: 'qty',
-    filter: {
-      category: '草'
-    },
-    value: {
-      name: 'A',
-      free: 0,
-      sxb: 15
-    },
-    min: 0,
-    max: 4 
+let dutyTaxInsuranceConditions = {
+  code: "dutyTaxInsurance",
+  required: false,
+  name: "税险包",
+  defaultValue: 120,
+  description: "",
+  property: 'qty',
+  filter: {
+    "product.category": "手卷草"
   },
-  {
-    property: 'qty',
-    filter: {
-      category: '草'
-    },
-    value: {
+  operatorType: 'includeMax',
+  conditions: [
+    {
       name: 'A',
-      free: 1,
-      sxb: 15
+      value: 35,
+      min: 0,
+      max: 5
     },
-    min: 4,
-    max: 9 
-  },
-  {
-    property: 'qty',
-    filter: 'category.草',
-    value: {
+    {
       name: 'B',
-      free: 2,
-      sxb: 30
+      value: 50,
+      min: 5,
+      max: 10
     },
-    min: 9,
-    max: 14
-  },
-  {
-    property: 'qty',
-    filter: 'category.草',
-    value: {
+    {
       name: 'C',
-      free: 3,
-      sxb: 55
+      value: 75,
+      min: 10,
+      max: 15
     },
-    min: 14,
-    max: 19 
-  },
-  {
-    property: 'qty',
-    filter: 'category.草',
-    value: {
+    {
       name: 'D',
-      free: 4,
-      sxb: 70
+      value: 90,
+      min: 15,
+      max: 20
     },
-    min: 19,
-    max: 24 
-  },
-  {
-    property: 'qty',
-    filter: 'category.草',
-    value: {
+    {
       name: 'E',
-      free: 5,
-      sxb: 90
-    },
-    min: 24,
-    max: 999
-  }
-]
+      value: 120,
+      min: 20,
+      max: null
+    }
+  ]
+}
+
 const CREATE_ORDER_QUERY = gql`
   mutation createOrder($order: JSONObject!, $configId: String) {
     createOrder(order: $order, configId: $configId) {
@@ -246,20 +209,6 @@ const CartDrawer = (props) => {
               errorItem = foundItem;
             }
           }
-
-
-          // if (cartStockError.length > 0) {
-          //   let foundItem = cartStockError.find((anErrorItem)=>anErrorItem.inventoryId == record.inventoryId);
-          //   if (foundItem) {
-          //     if (foundItem.stock - record.qty < 0) {
-  
-          //     }
-          //     else {
-  
-          //     }
-          //   }
-          // }
- 
           
           return (
               <React.Fragment>
@@ -290,42 +239,6 @@ const CartDrawer = (props) => {
           )
         }
     },
-    // {
-    //     title: () => {
-    //         return (<div>价格 ({configCache.currencyUnit})<sub><small>/个</small></sub></div>)
-    //     },
-    //     key: 'price',
-    //     dataIndex: 'price'
-    // },
-    // {
-    //   title: '数量',
-    //   key: 'qty',
-    //   dataIndex: 'qty',
-    //   render: (text, record) => {
-    //     const handlePlusQty = () => {
-    //       let plusResult = plusItemQty(cartItems, record.inventoryId, 1);
-    //       if (plusResult.success) {
-    //         setCartItems(plusResult.data)
-    //       }
-    //     }
-    //     const handleMinusQty = () => {
-    //       let minusResult = minusItemQty(cartItems, record.inventoryId, 1);
-    //       if (minusResult.success) {
-    //         setCartItems(minusResult.data)
-    //       }
-    //     }
-    //     return (
-    //       <Input
-    //         min={1}
-    //         addonBefore={<MinusOutlined onClick={handleMinusQty} />}
-    //         addonAfter={<PlusOutlined onClick={handlePlusQty} />}
-    //         type="number"
-    //         disabled={true}
-    //         value={text}
-    //       />
-    //     )
-    //   }
-    // },
     {
       title: '',
       key: 'price',
@@ -372,10 +285,9 @@ const CartDrawer = (props) => {
   };
 
   const dutyTaxInsurance = (items) => {
-    
-    
-    let availableInsurance = dutyTaxInsuranceConditions[0].value.sxb;
-    let availableFreeGift = null;
+        
+    let availableInsurance = dutyTaxInsuranceConditions.defaultValue;
+    let availableFreeGift = giftPromotion.defaultValue;
     let totalQty = 0;
     if (productsResult && productsResult.length > 0) {
       let cartItemsProductIds = items.map((anItem)=>anItem.product._id)
@@ -397,13 +309,17 @@ const CartDrawer = (props) => {
           return total + current.qty;
         }, 0)
 
-        dutyTaxInsuranceConditions.map((aCondition)=>{
-          if (totalQty > aCondition.min && totalQty <= aCondition.max) {
-            availableInsurance = aCondition.value.sxb;
-            availableFreeGift = aCondition.value.free;
+        dutyTaxInsuranceConditions.conditions.forEach((aCondition)=>{
+          if (isBetween(aCondition.min,aCondition.max,totalQty,dutyTaxInsuranceConditions.operatorType)) {
+            availableInsurance = aCondition.value;
           }
-        });
+        })
 
+        giftPromotion.conditions.forEach((aCondition)=>{
+          if (isBetween(aCondition.min,aCondition.max,totalQty,giftPromotion.operatorType)) {
+            availableFreeGift = aCondition.value;
+          }
+        })
 
       }
     }
@@ -415,18 +331,6 @@ const CartDrawer = (props) => {
     }
     return result;
   }
-  // let deliveryInfo = () => {
-  //     let tooltip = (
-  //         <Tooltip title={Constants.deliveryFeeRules.dutyTaxInsuranceConditions[0].description}>
-  //             <Icon type="question-circle-o" />
-  //         </Tooltip>
-  //     )
-  //     return (
-  //         <div style={{display:"flex",alignItems:"center"}}>
-  //             邮费&nbsp;{tooltip}
-  //         </div>
-  //     )
-  // }
   
   let foundInsurance = dutyTaxInsurance(cartItems);
   function deliveryFeeInfo() {
@@ -449,8 +353,12 @@ const CartDrawer = (props) => {
                 <td>80</td>
               </tr>
               <tr>
-                <td>大于 1</td>
+                <td>小于/等于 2</td>
                 <td>96</td>
+              </tr>
+              <tr>
+                <td>大于 2</td>
+                <td>116</td>
               </tr>
             </tbody>
           </table>
@@ -467,36 +375,25 @@ const CartDrawer = (props) => {
         <div>
           <table style={{width:'100%'}}>
             <tbody>
-              <tr>
+              <tr key={'header'}>
                 <th>套餐</th>
                 <th>购买数量 (仅限手卷草)</th>
                 <th>价格 (RMB)</th>
               </tr>
-              <tr>
-                <td>A</td>
-                <td>满 5 包</td>
-                <td>15</td>
-              </tr>
-              <tr>
-                <td>B</td>
-                <td>满 10 包</td>
-                <td>30</td>
-              </tr>
-              <tr>
-                <td>C</td>
-                <td>满 15 包</td>
-                <td>55</td>
-              </tr>
-              <tr>
-                <td>D</td>
-                <td>满 20 包</td>
-                <td>70</td>
-              </tr>
-              <tr>
-                <td>E</td>
-                <td>满 25 包</td>
-                <td>90</td>
-              </tr>
+              {
+                dutyTaxInsuranceConditions.conditions.map((aCondition,index)=>{
+                  let msg = dutyTaxInsuranceConditions.operatorType == 'includeMax' ? 
+                    `${aCondition.min == null ? '或以下' : aCondition.min + 1} ~ ${aCondition.max == null ? '或以上' : aCondition.max} 包` 
+                    : `${aCondition.min == null ? '或以下' : aCondition.min} ~ ${aCondition.max == null ? '或以上' : aCondition.max - 1} 包`
+                  return (
+                    <tr key={index}>
+                      <td>{aCondition.name}</td>
+                      <td>{msg}</td>
+                      <td>{aCondition.value}</td>
+                    </tr>
+                  )
+                })
+              }
             </tbody>
           </table>
         </div>
