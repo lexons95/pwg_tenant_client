@@ -376,7 +376,7 @@ const ProductInfo = (props) => {
   return (
     <Modal
       title={product ? product.name : ""}
-      width={'99%'}
+      width={'78%'}
       visible={modalVisible}
       onCancel={closeModal}
       destroyOnClose
