@@ -167,7 +167,7 @@ const Header_01 = (props) => {
           <Menu.Item key={'/searchorder'}>搜索订单</Menu.Item>
           <Menu.Divider/>
           {
-            configId == 'mananml' ? 
+            configId == 'mananml' ?
             (<Menu.Item key={"site1"}><a target="_blank" href={"http://www.klklvapor.store"}>KLKLVapor</a></Menu.Item>) : (<Menu.Item key={"site2"}><a target="_blank" href={"http://store.mananml.shop"}>Mananml</a></Menu.Item>)
           }
           {/* <Menu.Item key={'/payment'}>付款</Menu.Item> */}

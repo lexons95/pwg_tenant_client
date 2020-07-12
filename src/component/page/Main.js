@@ -4,132 +4,136 @@ import { useConfigCache } from '../../utils/customHook';
 
 import { List, Typography, Divider } from 'antd';
 import { Table, Tag, Space } from 'antd';
+import wallpaper from '../../img/wallpaper.jpg';
+console.log("1111",wallpaper);
 
 const { Paragraph } = Typography;
 
 const Main = (props) => {
   const configCache = useConfigCache();
   const data = [
-  '本次活动赠送产品是皇室系列手卷草，每种口味限定10包，送完为止，如果下单时预留的口味没有货的话，客服会联系进行调换。',
-  'A. 买满任意5包草赠送皇室1包（口味可选）该独立订单另享赠品黑马8mm过滤嘴1袋+黑马110精致手卷册1册，税险包15。',
-  'B. 买满任意10包草赠皇室2包，口味可选，税险包30.',
-  'C. 买满任意15包草赠送皇室3包，口味可选，税险包55.',
-  'D. 买满任意20包草赠送皇室4包，口味可选，税险包70.',
-  'E. 买满任意25包草赠送皇室5包，口味可选，税险包90.',
+  '斯坦尼斯烟斗草是捷克烟斗收藏大师Dr.Josef Stanislav的得意杰作，他推出飞机系列的初衷是为了纪念自己的爸爸和爷爷，因为他们参与了第一次世界大战（1914-1918），并在战后成立的捷克斯洛伐克共和国担任战斗机飞行员，保卫共和国。Dr.Josef 曾经说过斯坦尼斯。',
+  '此次活动中，只要下单斗草的客户都可以获赠2种口味的斗草试抽包，口味任选。此外，鉴于年中的皇室活动圆满结束，但是活动结束不代表给予粉丝们的实惠就次止步，马男决定网站所有手卷草降价5-8元，具体价格以网站显示为主。'
 ];
 
 const des1 = [
-'（1）邮费：一公斤以内邮费80人民币，一到二公斤邮费96人民币，单个包裹重量不得超过2公斤.',
-'（2）下单后48小时内出国际快递单号，鉴于目前疫情还未平息，本地国际物流每周五清单运输。',
-'（3）整个物流时间为10-15个工作日。'
+'（1）邮费：1公斤以内邮费80人民币，1公斤到2公斤邮费96人民币，2公斤到3公斤邮费116人民币，单个包裹重量不得超过3公斤。',
+'（2）下单后48小时内出国际快递单号，鉴于目前疫情还未平息，本地国际物流每周五运输。',
+'（3）物流时间大概10-15个工作日，网站可以自行查询快递状态，当快递到达中国之后，是由中国邮政投递，在中国大陆运输的状态可以在中国邮政官网查询。',
+'（4）当顾客在本网站下单时，即被视为该产品的进口者，所以需要承担进口产品的关税，进口税，商品以及服务税（GST），增值税（VAT）或其他进口销售税项。有关进口税项等事宜，请直接与您当地的海关部门联络。',
+'（5）网站目前可以通过搜索用户手机号码来查询订单，订单页面还能查询订单的状态。'
 ];
 
 const des2 = [
-  '（1）为了让大家顺利拿到货物，马男推出税险包服务，对于选择了税险包服务的客户，马男包全程清关流程和税费，对于未选择税险包的客户，如果该订单中税，马男依旧会对该订单的清关流程进行协助，但该订单产生的税金需客户自行承担。',
-  '（2）关于税险包服务：所有类型的税险包服务客户均可自愿选择是否参保。',
-  '（3）关于是否参保，马男在此也为小伙伴们整理出了税单Tips，供大家参考。'
-]
-
-
-
-
-
-const dataSource = [
-  {
-    key: '1',
-    package: 'A （5+1）包',
-    tax: 60,
-    fee: 15,
-  },
-  {
-    key: '2',
-    package: 'B （10+2）包',
-    tax: 120,
-    fee: 30,
-  },
-  {
-    key: '3',
-    package: 'C （15+3）包',
-    tax: 180,
-    fee: 55,
-  },
-  {
-    key: '4',
-    package: 'D （20+4）包',
-    tax: 240,
-    fee: 70,
-  },
-  {
-    key: '5',
-    package: 'E （25+5）包',
-    tax: 300,
-    fee: 90,
-  },
+  '(1) 如果包裹被海关退运，需要客户承担退运运费。其次，等到包裹确认退运并且在我方收到之后，方可再次给客户补发包裹。'
 ];
 
-const columns = [
-  {
-    title: '套餐',
-    dataIndex: 'package',
-    key: 'package',
-    width: '130px'
-  },
-  {
-    title: '未参保预计缴纳税费',
-    dataIndex: 'tax',
-    key: 'tax',
-  },
-  {
-    title: '税险包价格',
-    dataIndex: 'fee',
-    key: 'fee',
-  },
+const des3 = [
+  '（1）以下情况我们会按照退货方式处理，如产品出现损坏（海关拆包检验不算在退货情况内），发霉，退货方式可以选择返还客户购买金额或者补发货物。',
+  '（2）非产品质量问题，不接受客户退货退款请求。'
 ];
+
+//
+// const dataSource = [
+//   {
+//     key: '1',
+//     package: 'A （5+1）包',
+//     tax: 60,
+//     fee: 15,
+//   },
+//   {
+//     key: '2',
+//     package: 'B （10+2）包',
+//     tax: 120,
+//     fee: 30,
+//   },
+//   {
+//     key: '3',
+//     package: 'C （15+3）包',
+//     tax: 180,
+//     fee: 55,
+//   },
+//   {
+//     key: '4',
+//     package: 'D （20+4）包',
+//     tax: 240,
+//     fee: 70,
+//   },
+//   {
+//     key: '5',
+//     package: 'E （25+5）包',
+//     tax: 300,
+//     fee: 90,
+//   },
+// ];
+//
+// const columns = [
+//   {
+//     title: '套餐',
+//     dataIndex: 'package',
+//     key: 'package',
+//     width: '130px'
+//   },
+//   {
+//     title: '未参保预计缴纳税费',
+//     dataIndex: 'tax',
+//     key: 'tax',
+//   },
+//   {
+//     title: '税险包价格',
+//     dataIndex: 'fee',
+//     key: 'fee',
+//   },
+// ];
 
   if (configId == 'mananml') {
     return (
       <div style ={{padding: '35px'}}>
         <div>
-          <h1>年中回馈-海淘来袭</h1>
-          <h2>皇室尊享主题季</h2>
-          <div>马男放水，补贴领到手软。为了回馈广大老客户，解决缺货问题，我们扬起了海淘的大帆，马男为了让大家都能顺利上船，对邮费和税费进行了大力补贴。</div>
-          <div>活动时间2020年6月15日-2020年6月30日</div>
+          <h1>斯坦尼斯斗草狂欢节</h1>
+          <div>活动时间2020年7月8日-2020年7月31日</div>
+          <img src = {wallpaper} className = 'main-wallpaper' />
         </div>
 
         <div style = {{textAlign: 'left', marginTop: '40px'}}>
 
-            <Divider orientation="left">具体活动如下</Divider>
+            <Divider orientation="left">活动明细</Divider>
             <List
               size="small"
-              header={<div style = {{fontWeight: 'bold'}}>可选套餐</div>}
+              header={<div style = {{fontWeight: 'bold'}}></div>}
               footer={<div style = {{textAlign: 'center'}}>Share & Enjoy</div>}
-              bordered
-
               dataSource={data}
-              renderItem={item => <List.Item>{item}</List.Item>}
+              renderItem={item => <List.Item style = {{whithSpace: "pre-wrap"}}>{item}</List.Item>}
             />
 
 
             <Divider orientation="left" style = {{marginTop: '40px'}}>海淘小贴士</Divider>
             <List
               size="small"
-              header={<div style = {{fontWeight: '120px', textAlign:'left'}}>一. 关于运输和邮费</div>}
+              header={<div style = {{fontWeight: 'bold', textAlign:'left'}}>一. 关于邮费和运输</div>}
               dataSource={des1}
               renderItem={item => <List.Item>{item}</List.Item>}
             />
             <List
               size="small"
-              header={<div style = {{fontWeight: 'bold'}}>二. 关于税险包</div>}
-              dataSource={des2}
+              header={<div style = {{fontWeight: 'bold'}}>二. 关于退运</div>}
+              dataSource = {des2}
+              renderItem={item => <List.Item>{item}</List.Item>}
+            />
+            <List
+              size="small"
+              header={<div style = {{fontWeight: 'bold'}}>三. 关于退货</div>}
+              dataSource = {des3}
               renderItem={item => <List.Item>{item}</List.Item>}
             />
 
           </div>
 
-          <div style = {{marginTop: '40px'}}>
+          {/*<div style = {{marginTop: '40px'}}>
             <Divider orientation="left" >海关税费</Divider>
             <Table dataSource={dataSource} columns={columns} pagination = {false}/>
-          </div>
+          </div>*/}
+
 
       </div>
     );
