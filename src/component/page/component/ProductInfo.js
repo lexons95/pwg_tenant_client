@@ -21,6 +21,8 @@ const READ_PRODUCT_INVENTORY_QUERY = gql`
       price
       stock
       weight
+      onSale
+      salePrice
       variants
       published
       productId
@@ -181,9 +183,16 @@ const ProductInfo = (props) => {
         let withStock = anInventory.stock && anInventory.stock > 0 ? true : false;
         let variantsResult = getInventoryVariants(product.variants, anInventory.variants)
         options.push(
-          <Option key={index} value={anInventory._id} disabled={!withStock}><div style={{display: 'flex', flexWrap: 'wrap', justifyContent:'space-between', whiteSpace:'break-spaces', width: '100%'}}>
-            {variantsResult.label + (withStock ? ` (还剩${anInventory.stock}个)` : ` (暂无)`)} 
-            <div>{configCache.currencyUnit} {anInventory.price}<sub>/个</sub></div></div>
+          <Option key={index} value={anInventory._id} disabled={!withStock}>
+            <div style={{display: 'flex', flexWrap: 'wrap', justifyContent:'space-between', whiteSpace:'break-spaces', width: '100%'}}>
+              {variantsResult.label + (withStock ? ` (还剩${anInventory.stock}个)` : ` (暂无)`)} 
+              {
+                anInventory.onSale ?
+                (<div style={{display: 'flex'}}><span style={{color: 'rgb(255,117,0)', fontWeight: 'bold'}}>{configCache.currencyUnit} {anInventory.salePrice}</span>&nbsp;<del style={{opacity: 1, color: 'rgb(161, 175, 201)'}}><div>{configCache.currencyUnit} {anInventory.price}</div></del> /个</div>)
+                : (<div>{configCache.currencyUnit} {anInventory.price}<sub>/个</sub></div>)
+              }
+            </div>
+            
           </Option>
         )
       })
@@ -314,6 +323,8 @@ const ProductInfo = (props) => {
               weight: foundInventory.weight,
               price: foundInventory.price,
               stock: foundInventory.stock,
+              onSale: foundInventory.onSale,
+              salePrice: foundInventory.salePrice,
               product: {
                 _id: product._id,
                 name: product.name,

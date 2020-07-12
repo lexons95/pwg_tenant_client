@@ -387,7 +387,12 @@ export const cartCalculation = (items = [], deliveryFee = 0, extraCharges = []) 
   if (items.length > 0) {
 
     items.forEach((anItem)=>{
-      subTotal += (anItem.price * anItem.qty)
+      if (anItem.onSale) {
+        subTotal += (anItem.salePrice * anItem.qty)
+      }
+      else {
+        subTotal += (anItem.price * anItem.qty)
+      }
     })
   
     if (stockLocation == '1') {

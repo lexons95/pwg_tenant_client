@@ -63,7 +63,7 @@ let dutyTaxInsuranceConditions = {
   code: "dutyTaxInsurance",
   required: false,
   name: "税险包",
-  defaultValue: 120,
+  defaultValue: 0,
   description: "",
   property: 'qty',
   filter: {
@@ -73,31 +73,31 @@ let dutyTaxInsuranceConditions = {
   conditions: [
     {
       name: 'A',
-      value: 35,
+      value: 0,
       min: 0,
       max: 5
     },
     {
       name: 'B',
-      value: 50,
+      value: 0,
       min: 5,
       max: 10
     },
     {
       name: 'C',
-      value: 75,
+      value: 0,
       min: 10,
       max: 15
     },
     {
       name: 'D',
-      value: 90,
+      value: 0,
       min: 15,
       max: 20
     },
     {
       name: 'E',
-      value: 120,
+      value: 0,
       min: 20,
       max: null
     }
@@ -259,7 +259,11 @@ const CartDrawer = (props) => {
         }
         return (
           <Space direction="vertical">
-            <span>{`${configCache.currencyUnit} ${text}`}<sub>/个</sub></span>
+            {
+              record.onSale ? 
+              (<div style={{display: 'flex'}}><span style={{color: 'rgb(255,117,0)', fontWeight: 'bold'}}>{configCache.currencyUnit} {record.salePrice}</span>&nbsp;<del style={{opacity: 1, color: 'rgb(161, 175, 201)'}}><div>{configCache.currencyUnit} {record.price}</div></del> /个</div>)
+              : (<span>{`${configCache.currencyUnit} ${text}`}/个</span>)
+            }
             <Input
               min={1}
               addonBefore={<MinusOutlined onClick={handleMinusQty} />}
@@ -342,22 +346,22 @@ const CartDrawer = (props) => {
             <tbody>
               <tr>
                 <th>最高重量</th>
-                <th>2kg</th>
+                <th>3kg</th>
               </tr>
               <tr>
                 <th>重量 (kg)</th>
                 <th>价格 (RMB)</th>
               </tr>
               <tr>
-                <td>小于/等于 1</td>
+                <td>0 ~ 1</td>
                 <td>80</td>
               </tr>
               <tr>
-                <td>小于/等于 2</td>
+                <td>1 ~ 2</td>
                 <td>96</td>
               </tr>
               <tr>
-                <td>大于 2</td>
+                <td>> 2</td>
                 <td>116</td>
               </tr>
             </tbody>
@@ -515,13 +519,13 @@ const CartDrawer = (props) => {
                       })
                     } */}
                     <Descriptions.Item label={(<span style={!allowOrder?{color:'red'}:{}}>邮费 ({(totalWeight/1000)}kg) <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{cartCalculationResult.deliveryFee}</Descriptions.Item>
-                    <Descriptions.Item label={(<span>税险包 <InfoCircleOutlined onClick={insuranceInfo} /></span>)}>
+                    {/* <Descriptions.Item label={(<span>税险包 <InfoCircleOutlined onClick={insuranceInfo} /></span>)}>
                       {
                         foundInsurance != null ? (
                           <Checkbox checked={acceptInsurance} onChange={onCheckboxChange}>{foundInsurance.sxb}</Checkbox>
                         ) : '-'
                       }
-                    </Descriptions.Item>
+                    </Descriptions.Item> */}
                     <Descriptions.Item label={`总计 (${configCache.currencyUnit})`}>{cartCalculationResult.total}</Descriptions.Item>
                 </Descriptions>
             </div>
