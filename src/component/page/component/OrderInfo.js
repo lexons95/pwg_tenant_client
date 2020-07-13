@@ -27,7 +27,7 @@ const OrderInfo = (props) => {
       <List.Item
         actions={[
           "qty: " + item.qty,
-          "price: " + item.price
+          "price: " + item.onSale ? item.salePrice : item.price
         ]}
       >
         <List.Item.Meta

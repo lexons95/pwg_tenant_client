@@ -217,7 +217,11 @@ const CartDrawer_1 = (props) => {
         }
         return (
           <Space direction="vertical">
-            <span>{`${configCache.currencyUnit} ${text}`}<sub>/个</sub></span>
+            {
+              record.onSale ? 
+              (<div style={{display: 'flex'}}><span style={{color: 'rgb(255,117,0)', fontWeight: 'bold'}}>{configCache.currencyUnit} {record.salePrice}</span>&nbsp;<del style={{opacity: 1, color: 'rgb(161, 175, 201)'}}><div>{configCache.currencyUnit} {record.price}</div></del> /个</div>)
+              : (<span>{`${configCache.currencyUnit} ${text}`}/个</span>)
+            }
             <Input
               min={1}
               addonBefore={<MinusOutlined onClick={handleMinusQty} />}
