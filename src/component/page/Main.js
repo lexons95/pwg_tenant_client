@@ -5,15 +5,16 @@ import { useConfigCache } from '../../utils/customHook';
 import { List, Typography, Divider } from 'antd';
 import { Table, Tag, Space } from 'antd';
 import wallpaper from '../../img/wallpaper.jpg';
-console.log("1111",wallpaper);
+import background from '../../img/plane-background.jpg'
+
 
 const { Paragraph } = Typography;
 
 const Main = (props) => {
   const configCache = useConfigCache();
   const data = [
-  '斯坦尼斯烟斗草是捷克烟斗收藏大师Dr.Josef Stanislav的得意杰作，他推出飞机系列的初衷是为了纪念自己的爸爸和爷爷，因为他们参与了第一次世界大战（1914-1918），并在战后成立的捷克斯洛伐克共和国担任战斗机飞行员，保卫共和国。Dr.Josef 曾经说过斯坦尼斯。',
-  '此次活动中，只要下单斗草的客户都可以获赠2种口味的斗草试抽包，口味任选。此外，鉴于年中的皇室活动圆满结束，但是活动结束不代表给予粉丝们的实惠就次止步，马男决定网站所有手卷草降价5-8元，具体价格以网站显示为主。'
+  '斯坦尼斯烟斗草是捷克烟斗收藏大师Dr.Josef Stanislav的得意杰作，他推出飞机系列的初衷是为了纪念自己的爸爸和爷爷，因为他们参与了第一次世界大战（1914-1918），并在战后成立的捷克斯洛伐克共和国担任战斗机飞行员，保卫共和国。',
+  '此次活动中，只要下单斗草的客户都可以获赠2种口味的斗草试抽包，口味任选。此外，鉴于年中的皇室活动圆满结束，但是活动结束不代表给予粉丝们的实惠就次止步，马男决定网站所有手卷草降价3-9ASd元asd，具体价格以网站显示为主。'
 ];
 
 const des1 = [
@@ -96,16 +97,22 @@ const des3 = [
         </div>
 
         <div style = {{textAlign: 'left', marginTop: '40px'}}>
+          <Divider orientation="left">活动明细</Divider>
 
-            <Divider orientation="left">活动明细</Divider>
-            <List
-              size="small"
-              header={<div style = {{fontWeight: 'bold'}}></div>}
-              footer={<div style = {{textAlign: 'center'}}>Share & Enjoy</div>}
-              dataSource={data}
-              renderItem={item => <List.Item style = {{whithSpace: "pre-wrap"}}>{item}</List.Item>}
-            />
+          <div className="main-section-container">
 
+              <div className = "main-style">
+                {/*<img src = {background} className = 'main-background' /> */}
+              </div>
+
+              <List
+                size="small"
+                header={<div style = {{fontWeight: 'bold'}}></div>}
+                footer={<div style = {{textAlign: 'center'}}>Share & Enjoy</div>}
+                dataSource={data}
+                renderItem={item => <List.Item className = "main-activityItem">{item}</List.Item>}
+              />
+          </div>
 
             <Divider orientation="left" style = {{marginTop: '40px'}}>海淘小贴士</Divider>
             <List
@@ -127,6 +134,11 @@ const des3 = [
               renderItem={item => <List.Item>{item}</List.Item>}
             />
 
+            <Divider orientation="left" style = {{marginTop: '40px'}}>关于我们</Divider>
+            <div>
+              <p>我们是东南亚成长最快的烟草和烟斗代理商和零售商，市场遍布亚洲。我们的理念是给我们的客户带来世界上最好的烟草和独一无二的品吸体验。</p>
+              <p>我们十分注重圈子文化的培养，成为我们圈子的一员，分享你觉得好的东西，让四海之内志同道合的人成为好友；一切产品，一切的热爱都是载体，这是形成圈子的基石，彼此珍惜圈子群，共同维护圈子内良好的环境，多交流多沟通，和平共处，营造良好氛围。</p>
+            </div>
           </div>
 
           {/*<div style = {{marginTop: '40px'}}>
