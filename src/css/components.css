@@ -15,10 +15,6 @@
   margin-bottom: 10px;
 }
 
-.orderInfo-extra > div > img {
-  width: 100%;
-}
-
 .orderInfo-modalWrapper {
   position: absolute;
   display: flex;
@@ -52,4 +48,29 @@
   overflow: scroll;
   display: flex;
   flex-direction: column;
+}
+
+.orderInfo-extra > div > img {
+  max-width: 100%;
+}
+
+.orderInfo-paymentQR img{
+  max-width: 100%;
+}
+
+@media only screen
+  and (min-width: 768px)
+  and (max-width: 1024px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+    .orderInfo-paymentQR img{
+      width: 75%;
+    }
+}
+
+@media screen
+  and (min-width: 1025px)
+  and (-webkit-min-device-pixel-ratio: 1) {
+    .orderInfo-paymentQR img{
+      width: 50%;
+    }
 }

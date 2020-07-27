@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Drawer, Button, Menu, PageHeader, Badge, Avatar, Breadcrumb } from 'antd';
 import { MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
-import { getAllProductCategory, configId } from '../../utils/Constants';
+import { getAllProductCategory } from '../../utils/Constants';
 import { useConfigCache, useCartCache } from '../../utils/customHook';
 
 import { useProductsQuery } from '../../utils/customHook';
 import CartDrawer from '../page/component/CartDrawer';
-import CartDrawer_1 from '../page/component/CartDrawer_1';
-
 
 const Header_01 = (props) => {
   const configCache = useConfigCache();
@@ -166,27 +164,15 @@ const Header_01 = (props) => {
           <Menu.Divider/>
           <Menu.Item key={'/searchorder'}>搜索订单</Menu.Item>
           <Menu.Divider/>
-          {
-            configId == 'mananml' ?
-            (<Menu.Item key={"site1"}><a target="_blank" href={"http://www.klklvapor.store"}>KLKLVapor</a></Menu.Item>) : (<Menu.Item key={"site2"}><a target="_blank" href={"http://store.mananml.shop"}>Mananml</a></Menu.Item>)
-          }
-          {/* <Menu.Item key={'/payment'}>付款</Menu.Item> */}
+          <Menu.Item key={"site2"}><a target="_blank" href={"http://store.mananml.shop"}>Mananml</a></Menu.Item>
         </Menu>
       </Drawer>
+  
+      <CartDrawer
+        drawerVisible={cartDrawerVisible}
+        closeDrawer={handleCartDrawerClose}
+      />
 
-      {
-        configId == 'mananml' ? (
-          <CartDrawer
-            drawerVisible={cartDrawerVisible}
-            closeDrawer={handleCartDrawerClose}
-          />
-        ) : (
-          <CartDrawer_1
-            drawerVisible={cartDrawerVisible}
-            closeDrawer={handleCartDrawerClose}
-          />
-        )
-      }
     </div>
   )
 }

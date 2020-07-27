@@ -5,7 +5,7 @@ import { PlusOutlined, MinusOutlined, InfoCircleOutlined} from '@ant-design/icon
 import { useMutation } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
 
-import { isBetween, cartCalculation, plusItemQty, minusItemQty, removeItemFromCart, defaultImage_system, configId } from '../../../utils/Constants';
+import { cartCalculation, plusItemQty, minusItemQty, removeItemFromCart, defaultImage_system, configId } from '../../../utils/Constants';
 import { useConfigCache, useCartCache, setCartCache, useProductsQuery, useCustomerCache, setCustomerCache } from '../../../utils/customHook';
 import { showMessage } from '../../../utils/component/notification';
 import Loading from '../../../utils/component/Loading';
@@ -13,96 +13,6 @@ import OrderInfo from './OrderInfo';
 
 const { Paragraph, Text } = Typography;
 const { Panel } = Collapse;
-
-const giftPromotion = {
-  code: "",
-  name: "",
-  description: "",
-  defaultValue: 0,
-  property: 'qty',
-  filter: {
-    "product.category": "手卷草"
-  },
-  operatorType: 'includeMax',
-  conditions: [
-    {
-      name: 'A',
-      value: 1,
-      min: 4,
-      max: 9
-    },
-    {
-      name: 'B',
-      value: 2,
-      min: 9,
-      max: 14
-    },
-    {
-      name: 'C',
-      value: 3,
-      min: 14,
-      max: 19
-    },
-    {
-      name: 'D',
-      value: 4,
-      min: 19,
-      max: 24
-    },
-    {
-      name: 'E',
-      value: 5,
-      min: 24,
-      max: 999
-    }
-  ]
-}
-
-
-let dutyTaxInsuranceConditions = {
-  code: "dutyTaxInsurance",
-  required: false,
-  name: "税险包",
-  defaultValue: 0,
-  description: "",
-  property: 'qty',
-  filter: {
-    "product.category": "手卷草"
-  },
-  operatorType: 'includeMax',
-  conditions: [
-    {
-      name: 'A',
-      value: 0,
-      min: 0,
-      max: 5
-    },
-    {
-      name: 'B',
-      value: 0,
-      min: 5,
-      max: 10
-    },
-    {
-      name: 'C',
-      value: 0,
-      min: 10,
-      max: 15
-    },
-    {
-      name: 'D',
-      value: 0,
-      min: 15,
-      max: 20
-    },
-    {
-      name: 'E',
-      value: 0,
-      min: 20,
-      max: null
-    }
-  ]
-}
 
 const CREATE_ORDER_QUERY = gql`
   mutation createOrder($order: JSONObject!, $configId: String) {
@@ -128,8 +38,6 @@ const CartDrawer = (props) => {
 
   const [ cartStockError, setCartStockError ] = useState([]);
   const [ currentCollapsePanel, setCurrentCollapsePanel ] = useState('1');
-
-  const [ acceptInsurance, setAcceptInsurance ] = useState(true);
 
   const productsResult = useProductsQuery();
 
@@ -210,6 +118,20 @@ const CartDrawer = (props) => {
             }
           }
 
+
+          // if (cartStockError.length > 0) {
+          //   let foundItem = cartStockError.find((anErrorItem)=>anErrorItem.inventoryId == record.inventoryId);
+          //   if (foundItem) {
+          //     if (foundItem.stock - record.qty < 0) {
+  
+          //     }
+          //     else {
+  
+          //     }
+          //   }
+          // }
+ 
+          
           return (
               <React.Fragment>
                 <Avatar src={imageLink} size="large" shape="square"/>
@@ -239,6 +161,42 @@ const CartDrawer = (props) => {
           )
         }
     },
+    // {
+    //     title: () => {
+    //         return (<div>价格 ({configCache.currencyUnit})<sub><small>/个</small></sub></div>)
+    //     },
+    //     key: 'price',
+    //     dataIndex: 'price'
+    // },
+    // {
+    //   title: '数量',
+    //   key: 'qty',
+    //   dataIndex: 'qty',
+    //   render: (text, record) => {
+    //     const handlePlusQty = () => {
+    //       let plusResult = plusItemQty(cartItems, record.inventoryId, 1);
+    //       if (plusResult.success) {
+    //         setCartItems(plusResult.data)
+    //       }
+    //     }
+    //     const handleMinusQty = () => {
+    //       let minusResult = minusItemQty(cartItems, record.inventoryId, 1);
+    //       if (minusResult.success) {
+    //         setCartItems(minusResult.data)
+    //       }
+    //     }
+    //     return (
+    //       <Input
+    //         min={1}
+    //         addonBefore={<MinusOutlined onClick={handleMinusQty} />}
+    //         addonAfter={<PlusOutlined onClick={handlePlusQty} />}
+    //         type="number"
+    //         disabled={true}
+    //         value={text}
+    //       />
+    //     )
+    //   }
+    // },
     {
       title: '',
       key: 'price',
@@ -288,55 +246,7 @@ const CartDrawer = (props) => {
     onChange: onSelectChange,
   };
 
-  const dutyTaxInsurance = (items) => {
-
-    let availableInsurance = dutyTaxInsuranceConditions.defaultValue;
-    let availableFreeGift = giftPromotion.defaultValue;
-    let totalQty = 0;
-    if (productsResult && productsResult.length > 0) {
-      let cartItemsProductIds = items.map((anItem)=>anItem.product._id)
-      let foundProducts = productsResult.filter((aProduct)=>{
-        if (cartItemsProductIds.indexOf(aProduct._id) >= 0) {
-          if (aProduct.category && aProduct.category.length > 0) {
-            if (aProduct.category[0].name == '手卷草') {
-              return true;
-            }
-          }
-        }
-        return false;
-      })
-      let productIds = foundProducts.map((aProduct)=>aProduct._id);
-      let foundItems = items.filter((anItem)=>{return productIds.indexOf(anItem.product._id) >= 0});
-
-      if (foundItems.length > 0) {
-        totalQty = foundItems.reduce((total, current)=>{
-          return total + current.qty;
-        }, 0)
-
-        dutyTaxInsuranceConditions.conditions.forEach((aCondition)=>{
-          if (isBetween(aCondition.min,aCondition.max,totalQty,dutyTaxInsuranceConditions.operatorType)) {
-            availableInsurance = aCondition.value;
-          }
-        })
-
-        giftPromotion.conditions.forEach((aCondition)=>{
-          if (isBetween(aCondition.min,aCondition.max,totalQty,giftPromotion.operatorType)) {
-            availableFreeGift = aCondition.value;
-          }
-        })
-
-      }
-    }
-    let result = null;
-    result = {
-      sxb: availableInsurance,
-      free: availableFreeGift,
-      total: totalQty
-    }
-    return result;
-  }
-
-  let foundInsurance = dutyTaxInsurance(cartItems);
+  
   function deliveryFeeInfo() {
     Modal.info({
       title: '邮费',
@@ -345,24 +255,10 @@ const CartDrawer = (props) => {
           <table style={{width:'100%'}}>
             <tbody>
               <tr>
-                <th>最高重量</th>
-                <th>3kg</th>
+                <td>一律 {configCache.currencyUnit + configCache.delivery}</td>
               </tr>
               <tr>
-                <th>重量 (kg)</th>
-                <th>价格 (RMB)</th>
-              </tr>
-              <tr>
-                <td>0 ~ 1</td>
-                <td>80</td>
-              </tr>
-              <tr>
-                <td>1 ~ 2</td>
-                <td>96</td>
-              </tr>
-              <tr>
-                <td>> 2</td>
-                <td>116</td>
+                <td>买满 {configCache.currencyUnit}125 免邮费</td>
               </tr>
             </tbody>
           </table>
@@ -371,98 +267,11 @@ const CartDrawer = (props) => {
       maskClosable: true,
       onOk() {},
     });
-  }
-  function insuranceInfo() {
-    Modal.info({
-      title: '税险包（选择性收费）',
-      content: (
-        <div>
-          <table style={{width:'100%'}}>
-            <tbody>
-              <tr key={'header'}>
-                <th>套餐</th>
-                <th>购买数量 (仅限手卷草)</th>
-                <th>价格 (RMB)</th>
-              </tr>
-              {
-                dutyTaxInsuranceConditions.conditions.map((aCondition,index)=>{
-                  let msg = dutyTaxInsuranceConditions.operatorType == 'includeMax' ?
-                    `${aCondition.min == null ? '或以下' : aCondition.min + 1} ~ ${aCondition.max == null ? '或以上' : aCondition.max} 包`
-                    : `${aCondition.min == null ? '或以下' : aCondition.min} ~ ${aCondition.max == null ? '或以上' : aCondition.max - 1} 包`
-                  return (
-                    <tr key={index}>
-                      <td>{aCondition.name}</td>
-                      <td>{msg}</td>
-                      <td>{aCondition.value}</td>
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </table>
-        </div>
-      ),
-      maskClosable: true,
-      onOk() {},
-    });
-  }
-
-  function freeGiftInfo() {
-    Modal.info({
-      title: '赠品（请在备注填写 口味名字/代号 和 数量）',
-      content: (
-        <div>
-          <table style={{width:'100%'}}>
-            <tbody>
-              <tr>
-                <th colSpan="2">
-                  本次活动赠送产品是皇室系列手卷草，每种口味限定10包，送完为止，如果下单时预留的口味没有货的话，客服会联系进行调换。
-                </th>
-              </tr>
-              <tr>
-                <th>口味</th>
-              </tr>
-              <tr>
-                <td>斯坦尼斯巴尔干拉塔尼亚</td>
-              </tr>
-              <tr>
-                <td>斯坦尼斯醇正维吉尼亚</td>
-              </tr>
-              <tr>
-                <td>斯坦尼斯顺滑香草</td>
-              </tr>
-              <tr>
-                <td>斯坦尼斯野山樱桃</td>
-              </tr>
-              <tr>
-                <td>斯坦尼斯菁纯黑树莓</td>
-              </tr>
-              <tr>
-                <td>斯坦尼斯伦敦经典</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      ),
-      maskClosable: true,
-      onOk() {},
-    });
-  }
-
-  function onCheckboxChange(e) {
-    setAcceptInsurance(e.target.checked)
   }
 
   let extraCharges = [];
-  if (foundInsurance != null && acceptInsurance) {
-    extraCharges.push({
-      code: 'dutyTaxInsurance',
-      name: '税险包',
-      value: foundInsurance.sxb
-    })
-  }
 
-  let {allowOrder, totalWeight, ...cartCalculationResult} = cartCalculation(cartItems, deliveryFee, extraCharges);
+  let {allowOrder, ...cartCalculationResult} = cartCalculation(cartItems, deliveryFee, extraCharges);
 
   const cartTableFooter = () => {
     const handleDeleteItems = () => {
@@ -486,12 +295,11 @@ const CartDrawer = (props) => {
         )
     }
 
-    console.log('itemsss', cartItems)
     return (
         <React.Fragment>
             <div style={{display:"flex",flexWrap:"wrap",justifyContent:"space-between"}}>
                 {deleteButton}
-                <Descriptions
+                <Descriptions 
                     bordered={true}
                     size="small"
                     column={{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
@@ -503,14 +311,8 @@ const CartDrawer = (props) => {
                         return (<Descriptions.Item key={index} label={(<span>{aCharge.name} <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{aCharge.value}</Descriptions.Item>)
                       })
                     } */}
-                    <Descriptions.Item label={(<span style={!allowOrder?{color:'red'}:{}}>邮费 ({(totalWeight/1000)}kg) <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{cartCalculationResult.deliveryFee}</Descriptions.Item>
-                    {/* <Descriptions.Item label={(<span>税险包 <InfoCircleOutlined onClick={insuranceInfo} /></span>)}>
-                      {
-                        foundInsurance != null ? (
-                          <Checkbox checked={acceptInsurance} onChange={onCheckboxChange}>{foundInsurance.sxb}</Checkbox>
-                        ) : '-'
-                      }
-                    </Descriptions.Item> */}
+                    {/* <Descriptions.Item label={(<span>邮费 <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{cartCalculationResult.deliveryFee}</Descriptions.Item> */}
+                    <Descriptions.Item label={(<span>邮费 <InfoCircleOutlined onClick={deliveryFeeInfo} /></span>)}>{cartCalculationResult.deliveryFee}</Descriptions.Item>
                     <Descriptions.Item label={`总计 (${configCache.currencyUnit})`}>{cartCalculationResult.total}</Descriptions.Item>
                 </Descriptions>
             </div>
@@ -519,7 +321,7 @@ const CartDrawer = (props) => {
   }
 
   let submitDisabled = cartItems.length > 0 && !loadingCreateOrder && allowOrder ? false : true;
-
+  
   const onSubmit = (values) => {
     console.log('onSubmit', values)
     const { remark, ...restValues } = values;
@@ -536,7 +338,7 @@ const CartDrawer = (props) => {
       deliveryFee: cartCalculationResult.deliveryFee,
       customer: restValues,
       remark: remark
-    }
+    }    
     if (!submitDisabled) {
       createOrder({
         variables: {
@@ -551,7 +353,7 @@ const CartDrawer = (props) => {
 
   //let formInitialValues = customerCache ? customerCache : {}
 
-
+  
   return (
     <Drawer
       title="购物车"
@@ -565,38 +367,38 @@ const CartDrawer = (props) => {
     >
       {
         cartCache ? (
-          <Collapse
-            bordered={false}
-            //defaultActiveKey={['1','2']}
-            expandIconPosition="right"
+          <Collapse 
+            bordered={false} 
+            //defaultActiveKey={['1','2']} 
+            expandIconPosition="right" 
             activeKey={currentCollapsePanel}
             accordion
             onChange={(value)=>{
               setCurrentCollapsePanel(value)
             }}
           >
-            <Panel
-              //header={(<Button type="link">产品列表</Button>)}
-              header={"产品列表"}
+            <Panel 
+              //header={(<Button type="link">产品列表</Button>)} 
+              header={"产品列表"} 
               key="1"
             >
               <Table
                 rowKey="inventoryId"
-                columns={cartTableCol}
-                dataSource={cartItems}
+                columns={cartTableCol} 
+                dataSource={cartItems} 
                 pagination={false}
                 size="small"
                 rowSelection={rowSelection}
                 footer={() => cartTableFooter()}
               />
             </Panel>
-            <Panel
-              //header={(<Button type="link" disabled={submitDisabled}>下一步</Button>)}
-              header={"下一步"}
-              key="2"
+            <Panel 
+              //header={(<Button type="link" disabled={submitDisabled}>下一步</Button>)} 
+              header={"下一步"} 
+              key="2" 
               disabled={submitDisabled}
             >
-              <Form
+              <Form 
                 form={form}
                 layout={'vertical'}
                 onFinish={onSubmit}
@@ -619,13 +421,8 @@ const CartDrawer = (props) => {
                     <Input/>
                   </Form.Item>
                 </Space>
-                <Form.Item name={'remark'} label={
-                  foundInsurance.free && foundInsurance.free > 0 ? (
-                    <span>备注 【符合活动条件 (可获得赠品数量: {foundInsurance.free}包): <Button type='link' onClick={freeGiftInfo}>点击查看赠品选项</Button>】</span>
-                  ) : "备注"
-                } rules={foundInsurance.free && foundInsurance.free > 0 ? [{ required: true, message:"请输入赠品口味及数量" }] : []}>
+                <Form.Item name={'remark'} label={'备注'}>
                   <Input.TextArea
-                    placeholder={'可填写赠品口味'}
                     defaultValue={""}
                     rows={4}
                   />
@@ -637,7 +434,7 @@ const CartDrawer = (props) => {
               </Form>
             </Panel>
           </Collapse>
-
+          
         ) : null
       }
 

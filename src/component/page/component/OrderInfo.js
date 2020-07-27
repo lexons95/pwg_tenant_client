@@ -125,7 +125,7 @@ const OrderInfo = (props) => {
         <div className="orderInfo-extra">
           {
             configCache.paymentQRImage ?
-            <div style={{textAlign:'center',flexGrow:1}}>
+            <div className="orderInfo-paymentQR" style={{textAlign:'center',flexGrow:1}}>
               <img src={configCache.imageSrc + configCache.paymentQRImage} />
             </div>
             : null

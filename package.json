@@ -1,5 +1,5 @@
 {
-  "name": "pwg_mananml",
+  "name": "pwg_tenant_client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
