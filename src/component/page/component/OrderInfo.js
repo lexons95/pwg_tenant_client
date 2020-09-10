@@ -1,6 +1,9 @@
-import React from 'react';
-import { Modal, Divider, Descriptions, List, Avatar } from 'antd';
+import React, { useState } from 'react';
+import { Modal, Divider, Descriptions, List, Avatar, Button } from 'antd';
 import { format } from 'date-fns';
+import {
+  RedoOutlined
+} from '@ant-design/icons';
 
 import { defaultImage_system } from '../../../utils/Constants';
 import { useConfigCache } from '../../../utils/customHook';
@@ -8,6 +11,7 @@ import { useConfigCache } from '../../../utils/customHook';
 const OrderInfo = (props) => {
   const { order, closeModal, visible, ...restProps } = props;
   const configCache = useConfigCache();
+  const [ imageVersion, setImageVersion ] = useState((new Date()).getTime())
 
   const orderItems = (item) => {
     let title = item.product.name;
@@ -45,6 +49,11 @@ const OrderInfo = (props) => {
   let foundDutyTaxInsurance = order && order.charges && order.charges.length > 0 ? order.charges.find((aCharge)=>{return aCharge.code && aCharge.code == "dutyTaxInsurance"}) : null
   if (foundDutyTaxInsurance != null) {
     extraCharges.push(foundDutyTaxInsurance)
+  }
+
+  const refreshImage = () => {
+    let currentTime = (new Date()).getTime()
+    setImageVersion(currentTime)
   }
 
   return (
@@ -120,6 +129,7 @@ const OrderInfo = (props) => {
 
         <div style = {{textAlign:'center'}}>
           <h1>扫码付款后记得备注名字，后台需要确认订单</h1>
+          <Button onClick={refreshImage} icon={(<RedoOutlined/>)} />
         </div>
 
         <div className="orderInfo-extra">

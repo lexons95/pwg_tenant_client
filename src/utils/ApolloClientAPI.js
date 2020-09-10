@@ -3,10 +3,13 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 
 // export const MIDDLETIER_URL = "http://localhost:3000/graphql";
-export const MIDDLETIER_URL = "http://15.165.150.23/graphql";
+// export const MIDDLETIER_URL = "http://15.165.150.23/graphql";
+export const MIDDLETIER_URL = "http://8.210.145.128/graphql";
 
 export default function ApolloClientAPI(middletierURL = null) {
-  const cache = new InMemoryCache({ addTypename: false });
+  const cache = new InMemoryCache({ 
+    addTypename: false
+  });
   const client = new ApolloClient({
       cache,
       link: new HttpLink({

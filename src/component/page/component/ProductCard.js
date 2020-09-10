@@ -36,7 +36,7 @@ const ProductCard = (props) => {
   let totalStock = getTotalStock();
 
   return (
-    <div className="productCard-container" onClick={onCardClicked}>
+    <div className="productCard-container" onClick={onCardClicked} style={{opacity: totalStock > 0 ? 1 : 0.6}}>
       <div className="productCard-media" style={getProductImages()}></div>
       <div className="productCard-info">
         
