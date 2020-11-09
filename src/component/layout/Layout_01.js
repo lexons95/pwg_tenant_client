@@ -13,12 +13,14 @@ const Layout_01 = (props) => {
           {props.header ? props.header : null}
         </div>
         {
-            configCache && configCache.profile.notice ? (
-              <div className="notice">
+          configCache && configCache.profile.notice ? (
+            <div className="notice">
+              <div className="notice-wrapper">
                 <div className="slide-in-right">{configCache.profile.notice}</div>
               </div>
-            ) : null
-          }
+            </div>
+          ) : null
+        }
         <div className="content" ref={layoutContentRef}>
           {props.children ? props.children : null}
           <div className="footer">

@@ -1,8 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { Modal, Carousel, Select, Button, Input, Divider, Empty, Form, Tag, message } from 'antd';
 import { LeftOutlined, RightOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import { useLazyQuery } from "@apollo/react-hooks";
-import gql from 'graphql-tag';
+import { useLazyQuery, gql } from '@apollo/client';
 
 import { getInventoryVariants, configId } from '../../../utils/Constants';
 import { useConfigCache, setCartCache, useCartCache } from '../../../utils/customHook';
@@ -187,7 +186,7 @@ const ProductInfo = (props) => {
             <div style={{display: 'flex', flexWrap: 'wrap', justifyContent:'space-between', whiteSpace:'break-spaces', width: '100%'}}>
               {variantsResult.label + (withStock ? ` (还剩${anInventory.stock}个)` : ` (暂无)`)} 
               {
-                anInventory.onSale ?
+                anInventory.onSale && anInventory.salePrice ?
                 (<div style={{display: 'flex'}}><span style={{color: 'rgb(255,117,0)', fontWeight: 'bold'}}>{configCache.currencyUnit} {anInventory.salePrice}</span>&nbsp;<del style={{opacity: 1, color: 'rgb(161, 175, 201)'}}><div>{configCache.currencyUnit} {anInventory.price}</div></del> /个</div>)
                 : (<div>{configCache.currencyUnit} {anInventory.price}<sub>/个</sub></div>)
               }
@@ -330,6 +329,7 @@ const ProductInfo = (props) => {
                 name: product.name,
                 type: product.type,
                 category: product.category.length > 0 ? product.category[0].name : "",
+                categoryId: product.category.length > 0 ? product.category[0]._id : "",
                 image: productFavImage ? productFavImage.name : ""
               },
               variant: variantsResult.variants

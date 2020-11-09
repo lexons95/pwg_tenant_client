@@ -30,8 +30,8 @@ const OrderInfo = (props) => {
     return (
       <List.Item
         actions={[
-          "qty: " + item.qty,
-          "price: " + item.onSale ? item.salePrice : item.price
+          item.onSale && item.salePrice ? item.salePrice : item.price,
+          "x" + item.qty
         ]}
       >
         <List.Item.Meta
@@ -45,11 +45,11 @@ const OrderInfo = (props) => {
     )
   }
 
-  let extraCharges = []
-  let foundDutyTaxInsurance = order && order.charges && order.charges.length > 0 ? order.charges.find((aCharge)=>{return aCharge.code && aCharge.code == "dutyTaxInsurance"}) : null
-  if (foundDutyTaxInsurance != null) {
-    extraCharges.push(foundDutyTaxInsurance)
-  }
+  let extraCharges = order && order.charges && order.charges.length > 0 ? order.charges : []
+  // let foundDutyTaxInsurance = order && order.charges && order.charges.length > 0 ? order.charges.find((aCharge)=>{return aCharge.code && aCharge.code == "dutyTaxInsurance"}) : null
+  // if (foundDutyTaxInsurance != null) {
+  //   extraCharges.push(foundDutyTaxInsurance)
+  // }
 
   const refreshImage = () => {
     let currentTime = (new Date()).getTime()
@@ -118,7 +118,11 @@ const OrderInfo = (props) => {
                 {
                   extraCharges.length > 0 ? 
                   extraCharges.map((aCharge, index)=>{
-                    return <Descriptions.Item key={index} label={aCharge.name}>{aCharge.value}</Descriptions.Item>
+                    let deduct = false;
+                    if (aCharge.rewardType == 'percentage' || aCharge.rewardType == 'fixedAmount' || aCharge.rewardType == 'freeShipping') {
+                      deduct = true
+                    }
+                    return <Descriptions.Item key={index} label={aCharge.name}>{deduct ? "-" : ""}{aCharge.value ? aCharge.value : ""}</Descriptions.Item>
                   }) : null
                 }
                 <Descriptions.Item label="总计">{order.total}</Descriptions.Item>

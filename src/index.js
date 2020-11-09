@@ -4,7 +4,7 @@ import {
   // BrowserRouter as Router,
   HashRouter as Router,
 } from 'react-router-dom';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 import './index.css';
 import App from './App';
 import { DefaultClientAPI } from './utils/customHook';

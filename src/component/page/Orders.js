@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import { Table, Button, Input, Form, Tag } from 'antd';
 import { format } from 'date-fns';
-import gql from "graphql-tag";
-import { useLazyQuery } from "@apollo/react-hooks";
+import { useLazyQuery, gql } from '@apollo/client';
 
 import OrderInfo from './component/OrderInfo';
 import { configId } from '../../utils/Constants';
